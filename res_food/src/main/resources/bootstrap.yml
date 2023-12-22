@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        #namespace -> group ->${prefix}-${spring.profiles.active}.${file-extension}
+        namespace: res134
+        group: DEFAULT_GROUP
+        username: nacos
+        password: nacos
+        prefix: res-foods
+        file-extension: yml
+        shared-configs:
+          - {dataId: 'mysql8local.yml',refresh: true}
+          - {dataId: 'redislocal.yml',refresh: true}
+  profiles:
+    active: prod
+

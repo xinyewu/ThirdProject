@@ -1,0 +1,51 @@
+#server:
+#  port: 8000
+#spring:
+#  application:
+#    name: resorder  #resorder是此服务注册到nacos的服务名
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
+#    sentinel: #sentinel配置
+#      transport:
+#        port: 8720                  #跟控制台交流的端口,随意指定一个未使用的端口即可
+#        dashboard: localhost:9999   #dashboard地址与端口
+#      eager: true                   #表示 Sentinel 会在应用启动时立即进行初始化。这意味着 Sentinel 会立即加载规则、统计信息等相关的数据，并开始监控和限流
+#      web-context-unify: false      #关闭context整合
+#  session:
+#    store-type: redis   #将session保存到Redis中
+#  redis:
+#    database: 1     #Redis默认0-15 总共16个库，这里采用1库
+#    host: 127.0.0.1    #到docker后修改，还要加上用户名和密码，且Redis中配置访问的主机的ip，以提高安全性
+#    port: 6379
+#    lettuce:
+#      pool:
+#        max-active: 8
+#        max-wait: -1ms
+#        max-idle: 5
+#        min-idle: 0
+#    timeout: 5000
+#
+#
+#logging:
+#  level:
+#    root: info
+#    org.springframeworkb: info
+#    com.apache: error
+#    com.yc.api: debug
+#  file:
+#    #name: mylog.log
+#    path: logs/
+#
+#feign:
+#  compression:
+#    request:
+#      enabled: true
+#      mime-types: # 可以被压缩的类型
+#        - text/xml
+#        - application/xml
+#        - application/json
+#      min-request-size: 2048 # 超过2048的字节进行压缩
+#    response:
+#      enabled: true

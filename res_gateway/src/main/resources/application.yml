@@ -1,0 +1,62 @@
+server:
+  port: 20001
+
+spring:
+  application:
+    name: res_gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        #namespace: res134
+
+    gateway: #基础的路由转发配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPattern: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+      routes: #查看配置源码 ：routes是一个list 集合（有序）
+        - id: res_food
+          #uri: http://localhost:9200 #http://localhost:9200/resfood/findAll
+          uri: lb://resfood     #lb代表loadbalance     resfood服务名-》利用loadbalance保存的服务名获取一台
+          predicates: #PathRoutePredicateFactory
+            - Path=/resfood/**  #http://localhost:20001/resfood/findAll
+#            - After=2023-12-19T17:15:47.789+08:00[Asia/Shanghai]
+            - ServiceTimeBetween=上午06:00,下午10:00  #测试addCart服务时间段控制
+          filters:
+            - AddRequestHeader=token,123
+            - MyTime=hello,world
+
+        - id: res_order
+          uri: lb://resorder
+          predicates:
+            - Path=/resorder/**
+
+        - id: res_user
+          uri: lb://resuser
+          predicates:
+            - Path=/resuser/**
+
+        - id: resIndex
+          uri: lb://resIndex
+          predicates:
+            - Path=/**
+
+#        - id: baidu   #唯 一区别的名字
+#          uri: http://www.baidu.com    #都转发到baidu，替换请求路劲http://localhost:20001/
+#          predicates: #断言,比较条件
+#            - Path=/**  #所有请求（通用配置）   Loaded RoutePredicateFactory [Path]
+
+
+
+management: #通过 actuator暴露此服务的管理端口
+  endpoints:
+    web: #通过web来暴露管理API,
+      exposure:
+        include: "*"                      #  * 代表将所有的端口暴露   一定要加"",因为 *是特殊字符，加""防止转义

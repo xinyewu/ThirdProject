@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--适配设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>管理员登录</title>
+    <!--前端优化：
+      1.上线项目采用 .min.css/ .min.js
+      2.采用CDN（内容分发网络）-->
+<!--    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/adminLogin.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container" id="app">
+
+    <form class="form-signin">
+        <h2 class="form-signin-heading">管理员后台登录</h2>
+        <label for="inputEmail" class="sr-only">用户名：</label>
+
+        <input type="text" id="inputEmail" class="form-control" placeholder="请输入用户名" v-model="raname" required
+               autofocus>
+        <label for="inputPassword" class="sr-only">密码：</label>
+
+        <input type="password" id="inputPassword" class="form-control" placeholder="请输入密码" v-model="rapwd" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="button" @click="login()">登录</button>
+    </form>
+
+</div> <!-- /container -->
+</body>
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            raname: 'a',
+            rapwd: 'a'
+        },
+        computed: {},
+        methods: {
+            login: function () {
+                let _this = this;
+                var params = new URLSearchParams();
+                params.append('raname', _this.raname);
+                params.append('rapwd', _this.rapwd);
+                axios.post("resuser/resadmin/login", params).then(result => {
+                    var data = result.data;
+                    if (data.code == 1) {
+                        alert("管理员登录成功");
+                        location.href = "back/adminBoard.html"
+                    } else {
+                        alert("管理员登录失败", data.msg);
+                    }
+                })
+            }
+        },
+        mounted: function () {
+
+        }
+    });
+</script>
+</html>

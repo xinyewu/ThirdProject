@@ -1,0 +1,4 @@
+/test_feign/
+/test_jdkproxy/
+/test_*/
+/logs/*.gz

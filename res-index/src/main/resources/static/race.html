@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>race</title>
+
+</head>
+
+<body>
+
+
+</body>
+
+
+<script>
+    function timerPromise(delay) {
+        return new Promise(function (resolve) {
+            //console.log(delay);
+            resolve(delay);
+        });
+    }
+    // 任何一个promise变为resolve或reject 的话程序就停止运行
+    Promise.race([
+        timerPromise(1),
+        timerPromise(32),
+        timerPromise(64),
+        timerPromise(128)
+    ]).then(function (value) {
+        console.log(value);    // => 1
+    });
+
+
+
+
+    // function getURL(URL) {
+    //     return new Promise(function (resolve, reject) {
+    //         var req = new XMLHttpRequest();
+    //         req.open('GET', URL, true);
+    //         req.onload = function () {
+    //             if (req.status === 200) {
+    //                 resolve(req.responseText);
+    //             } else {
+    //                 reject(new Error(req.statusText));
+    //             }
+    //         };
+    //         req.onerror = function () {
+    //             reject(new Error(req.statusText));
+    //         };
+    //         req.send();
+    //     });
+    // }
+    // var URL = "...";
+    // getURL(URL).then(function onFulfilled(value) {
+    //     console.log(value);
+    // });
+
+    
+
+
+
+</script>
+
+</html>

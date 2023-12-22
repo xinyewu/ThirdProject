@@ -1,0 +1,21 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: resIndex  #resIndex是此服务注册到nacos的服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+
+logging:
+  level:
+    root: info
+    org.springframeworkb: debug
+    com.apache: error
+    com.yc.api: debug
+  file:
+    #name: mylog.log
+    path: logs/

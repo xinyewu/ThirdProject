@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>all</title>
+
+</head>
+
+<body>
+
+
+</body>
+
+
+<script>
+    var promise1 = new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve(1);
+        }, 3000);
+    });
+    var promise2 = new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve(2);
+        }, 1000);
+    });
+    Promise.all([promise1, promise2]).then(function (value) {
+        console.log(value); // 打印[1,2]
+    });
+
+</script>
+
+</html>

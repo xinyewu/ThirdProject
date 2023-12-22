@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>小萌神订餐网</title>
+    <!-- 图标 -->
+    <link rel="short icon" href="image/eat0.ico"/>
+    <link rel="stylesheet" href="css/index.css"/>
+<!--    1.采用CDN（内容分发网络）-->
+<!--    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">-->
+<!--    2.采用下载样式-->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="app">
+
+    <div class="head">
+        小萌神订餐网
+        <div class="right">
+            <span class="showlogin" id="showlogin" style="display: block" @click="loginflag=!loginflag"
+                  v-if="!isLoginFlag">登录</span>
+            <span id="exitspan" v-if="isLoginFlag">
+                欢迎：{{username}} | <a href="javascript:void" @click.prevent="logout()">退出</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="content">
+        <ul class="allfoods" id="allfoods">
+            <!--循环出来-->
+            <li v-for="item,index in dataset">
+                <h3 @click="showFood(item.fid)">{{item.fname}}<span class="badge" title="浏览次数">{{item.detail_count}}</span></h3>
+                <!--:id=`fid_$`-->
+                <div class="fooddesc" v-show="item.status">
+                    <img :src=`${item.fphoto}` class="foodimg"/>
+                    <article class="foodprice">
+                        <p>菜品描述:{{item.detail}}</p>
+                        <p class="normalprice">原价：￥{{item.norprice}}</p>
+                        <p class="realprice">特价：￥{{item.realprice}}</p>
+                        <p class="buybtn" @click="addCart(item.fid,1)">加入购物车</p>
+                    </article>
+                </div>
+
+            </li>
+        </ul>
+        <!--分页条-->
+        <a href="javascript:void" @click.prevent="clickPage(1)">第一页</a>
+        <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno-1)">上一页</a>
+        <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno+1)">下一页</a>
+        <a href="javascript:void" @click.prevent="clickPage(pagebean.totalpages)">最后一页</a>
+        总共{{pagebean.total}}条记录,每页{{pagebean.pagesize}}条记录,当前第{{pagebean.pageno}}页,共{{pagebean.totalpages}}页
+    </div>
+
+    <!--  <div class="look">浏览记录</div> -->
+    <div class="shoppingcar">
+        <div class="carbag" id="carbag" :class="{isShow:isHide==true,isHide:isHide==false}">
+            <p>购物车<span id="del" @Click="clearAll()">[清空]</span></p>
+            <table id="bagcontent" cellpadding="0" cellspacing="0">
+                <!--购物车的条目-->
+                <tr v-for="cartItem in cartItemArray">
+                    <td class="bagfname">{{cartItem.food.fname}}</td>
+                    <td class="bagnum">
+                        <button @click="addCart(cartItem.food.fid,1)">+</button>
+                        <span>{{cartItem.num}}</span>
+                        <button @click="addCart(cartItem.food.fid,-1)">-</button>
+                    </td>
+                    <td>{{cartItem.smallCount}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="carprice" @click.prevent="displayCart()">￥{{totalPrice}}</div>
+        <div class="carinfo" v-if="cartItemArray.length<=0">购物车是空的</div>
+        <div class="carinfo" v-else @click.prevent="orderflag=!orderflag">立即下单</div>
+    </div>
+
+    <div class="footer">
+        Copyright © 2016 Xiaomengsheng Incorporated Company. All rights reserved.
+        <br/>
+        订餐，就上小萌神订餐网!
+    </div>
+
+    <div class="login" id="login" v-if="loginflag">
+        <span id="unshow" @click="loginflag=false">X</span>
+        <form name="myform">
+            <table>
+                <tr>
+                    <td class="labname"><label for="username">用户名：</label></td>
+                    <td><input type="text" name="username" placeholder="请输入用户名" v-model="username"
+                               id="username"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="pwd">密码：</label></td>
+                    <td><input type="password" name="pwd" placeholder="请输入密码" v-model="pwd"
+                               id="pwd"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="yzm">验证码：</label></td>
+                    <td><input type="text" name="yzm" placeholder="请输入验证码" v-model="yzm"
+                               id="yzm"/></td>
+                    <td><img src="resuser/code.action" style="position:absolute;right: 1px;bottom: 71px;"
+                             id="yzm_img"/></td>
+                </tr>
+            </table>
+        </form>
+        <input type="button" value="login" class="btn" id="btn" @click="login()"/>
+    </div>
+
+    <!-- 订单信息 -->
+    <div class="login" id="myinfo" v-if="orderflag">
+        <span id="unshowinfo" @click.prevent="orderflag=false">X</span>
+        <form name="forminfo">
+            <table>
+                <tr>
+                    <td class="labname"><label for="address">送货地址:</label></td>
+                    <td><input name="address" type="text" placeholder="请输入送货地址" id="address"
+                               v-model="orderInfo.address"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="tel">联系电话:</label></td>
+                    <td><input type="text" id="tel" placeholder="请输入联系电话" name="tel" v-model="orderInfo.tel"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="deliverytime">送货时间:</label></td>
+                    <td><input type="text" name="deliverytime" id="deliverytime" placeholder="请输入送货时间（默认马上发货）"
+                               v-model="orderInfo.deliverytime"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="ps">附言:</label></td>
+                    <td><input type="text" id="ps" placeholder="请输入附言" name="ps" v-model="orderInfo.ps"/></td>
+                </tr>
+            </table>
+        </form>
+        <input type="button" value="提交" class="btn" id="submit" @click="confirmOrder()">
+    </div>
+
+</div>
+
+<!--  在网页里面引入javascript    jquery:DOM   大家注意顺序  -->
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            orderflag: false,     //送货地址div
+            loginflag: false,
+            isLoginFlag: false,
+
+            orderInfo: {
+                address: '湖南工学院',
+                tel: '12345678910',
+                deliverytime: '2023-11-02 19:04:04',
+                ps: '快快'
+            },
+
+            isHide: true,
+            cartItemArray: [],//订单菜品
+            totalPrice: 0.0,
+
+            userid: '',
+            username: '',
+            pwd: '',
+            email: '',
+            yzm: '',
+            dataset: [],//菜品列表
+
+            pagebean: {
+                pageno: 2,
+                pagesize: 5,
+                pre: 1,
+                next: 1,
+                sortby: "fid",
+                sort: "desc",
+                total: 0,
+                totalpages: 0
+            }
+        },
+        computed: {
+            //计算属性
+        },
+        methods: {
+            confirmOrder: function () {
+                var params = new URLSearchParams(this.orderInfo);//address=xx&tel=xxx
+                axios.post("resorder/confirmOrder", params).then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        this.cartItemArray = [];
+                        this.totalPrice = 0.0;
+                        this.isHide = false;
+                        this.orderflag = false;
+                        alert("下单成功")
+                    }
+                });
+            },
+            clearAll: function () {
+                axios.get("resorder/clearAll").then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        this.cartItemArray = [];
+                        this.totalPrice = 0.0;
+                        this.isHide = false;
+                    }
+                });
+            },
+            displayCart: function () {
+                this.isHide = !this.isHide;
+            },
+            showCart: function () {
+                axios.get("resorder/getCartInfo").then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        this.showCartInfo(jsonModel.obj);
+                        //this.isHide = false;
+                    } else {
+                        this.cartItemArray = [];
+                        this.totalPrice = 0.0;
+                        this.isHide = false;
+                    }
+                })
+            },
+            showCartInfo: function (cartItemArray) {
+                this.cartItemArray = cartItemArray;
+                this.totalPrice = 0;
+                this.cartItemArray.forEach((item, index) => {
+                    this.totalPrice += item.smallCount;
+                })
+            },
+            addCart: function (fid, num) {
+                let _this = this;
+                if (_this.username == null || _this.username == '') {
+                    alert("请先登录");
+                    _this.loginflag = true;
+                    return;
+                }
+                var params = new URLSearchParams();
+                params.append("num", num);
+                params.append("fid", fid);
+                axios.post("resorder/addCart", params).then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        _this.cartItemArray = jsonModel.obj;
+                        this.showCartInfo(_this.cartItemArray);
+                        return;
+                    }
+                    if (jsonModel.code == 0) {
+                        alert("添加购物车失败");
+                        return;
+                    }
+                    //添加成功，显示购物车
+                    this.showCartInfo(jsonModel.obj);//obj就是购物车
+                })
+            },
+            logout: function () {
+                var _this = this;
+                axios.get("resuser/logout").then(result => {
+                    var jsonModel = result.data;
+                    var resuser = jsonModel.obj;
+                    _this.userid = '';
+                    _this.email = '';
+                    _this.username = '';
+                    _this.isLoginFlag = false;
+                });
+            },
+            login: function () {
+                let _this = this;
+                var params = new URLSearchParams();
+                params.append('username', _this.username);
+                params.append('pwd', _this.pwd);
+                params.append('yzm', _this.yzm);
+                axios.post("resuser/login", params).then(result => {
+                    var data = result.data;
+                    if (data.code == 1) {
+                        alert("登录成功");
+                        var resuser = data.obj;
+                        _this.userid = resuser.userid;
+                        _this.email = resuser.email;
+                        _this.loginflag = false;
+
+                        _this.isLoginFlag = true;
+                    } else {
+                        alert("登录失败", data.msg);
+                    }
+                })
+            },
+            clickPage: function (pageno) {
+                if (pageno>this.pagebean.totalpages){
+                    alert("当前就是最后一页")
+                }else {
+                    var promise = this.showPage(pageno);// promise对象
+                    promise.then(result => {
+                        this.displayPage(result.data.data);//result.data就是 jsonModel
+                    });
+                }
+            },
+            showFood: function (fid) {
+                let _this = this;
+                _this.dataset.forEach((item, index) => {
+                    item.status = (fid == item.fid);
+                });
+                //访问controller->调用修改Redis给这菜：resfood_菜编号_detail
+                axios.get("resfood/detailCountAdd?fid="+fid).then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        var count = jsonModel.obj;
+                        _this.dataset.forEach((item, index) => {
+                            if (item.fid==fid){
+                                item.detail_count = count;
+                            }
+                        });
+                    }
+                });
+            },
+            //普通方法
+            showPage: function (pageno) {
+                var _this = this;//因为this在页面指window对象，在这里指vue对象，所以为防止变量污染，建议重新指定变量
+                //Promise对象
+                return axios.get("resfood/findPage?pageno=" + pageno
+                    + "&pagesize=" + this.pagebean.pagesize
+                    + "&sortby=" + this.pagebean.sortby
+                    + "&sort=" + this.pagebean.sort);
+            },
+            displayPage: function (jsonModel) {
+                if (jsonModel.code == 1) {
+                    jsonModel.dataset.forEach((item, index) => {
+                        item.status = false;
+                    });
+                    this.pagebean = jsonModel;
+                    //this.dataset 这是view对象   model view view-model  MVVM模型
+                    this.dataset = jsonModel.dataset;
+                }
+            },
+            isLogin: function () {
+                var _this = this;
+                axios.get("resuser/isLogin").then(result => {
+                    var jsonModel = result.data;
+                    if (jsonModel.code == 1) {
+                        var resuser = jsonModel.obj;
+                        _this.userid = resuser.userid;
+                        _this.email = resuser.email;
+                        _this.username = resuser.username;
+                        _this.loginflag = false;
+                        _this.isLoginFlag = true;
+                    } else {
+                        _this.isLoginFlag = false;
+                    }
+                });
+            }
+        },
+        mounted: function () {
+            axios.all([this.showPage(1), this.isLogin(), this.showCart()]).then(
+                axios.spread(function (d1, d2, d3) {
+                    let jsonModel = d1.data.data;
+                    if (jsonModel.code == 1) {
+                        vm.displayPage(jsonModel);
+                    }
+                })
+            );
+            // var prom=this.showPage(1);
+            // prom.then(result=>{
+            //
+            // });
+        }
+    });
+</script>
+
+</body>
+</html>
