@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<public th:fragment="public">
+<div th:fragment="public">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -27,7 +27,16 @@
             </div>
         </div>
     </nav>
-</public>
-
+</div>
+<div th:fragment="public1">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li class="active"><a th:href="@{/adminBoard}">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a th:href="@{/newfood}">新菜上架</a></li>
+            <li><a href="#">订单处理</a></li>
+            <li><a href="#">报表</a></li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
