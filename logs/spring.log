@@ -2621,3 +2621,22 @@ org.thymeleaf.exceptions.TemplateInputException: Error resolving fragment: "${ti
 2023-12-23 14:03:47.571  INFO 24868 --- [RMI TCP Connection(2)-192.168.15.4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2023-12-23 14:03:47.571  INFO 24868 --- [RMI TCP Connection(2)-192.168.15.4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2023-12-23 14:03:47.571  INFO 24868 --- [RMI TCP Connection(2)-192.168.15.4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2023-12-23 14:08:33.268  INFO 9460 --- [main] c.a.n.client.env.SearchableProperties    : properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+2023-12-23 14:08:33.367  INFO 9460 --- [main] com.yc.ResIndexApp                       : Starting ResIndexApp using Java 1.8.0_372 on DESKTOP-2GHSLBQ with PID 9460 (E:\项目小组\xiaomengshen-ThirdProject\res-index\target\classes started by xinye in E:\项目小组\xiaomengshen-ThirdProject)
+2023-12-23 14:08:33.367  INFO 9460 --- [main] com.yc.ResIndexApp                       : No active profile set, falling back to 1 default profile: "default"
+2023-12-23 14:08:34.050  INFO 9460 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=641e5a1c-8596-3461-8b96-65268fa2bfea
+2023-12-23 14:08:34.215  INFO 9460 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8001 (http)
+2023-12-23 14:08:34.215  INFO 9460 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-12-23 14:08:34.215  INFO 9460 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.63]
+2023-12-23 14:08:34.280  INFO 9460 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-12-23 14:08:34.280  INFO 9460 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 753 ms
+2023-12-23 14:08:34.499  INFO 9460 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2023-12-23 14:08:35.298  INFO 9460 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2023-12-23 14:08:35.350  INFO 9460 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8001 (http) with context path ''
+2023-12-23 14:08:35.381  INFO 9460 --- [main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+2023-12-23 14:08:35.381  INFO 9460 --- [main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+2023-12-23 14:08:36.396  INFO 9460 --- [main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP resIndex 192.168.15.4:8001 register finished
+2023-12-23 14:08:36.610  INFO 9460 --- [main] com.yc.ResIndexApp                       : Started ResIndexApp in 3.831 seconds (JVM running for 4.455)
+2023-12-23 14:08:36.959  INFO 9460 --- [RMI TCP Connection(3)-192.168.15.4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-12-23 14:08:36.959  INFO 9460 --- [RMI TCP Connection(3)-192.168.15.4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-12-23 14:08:36.959  INFO 9460 --- [RMI TCP Connection(3)-192.168.15.4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
