@@ -9,6 +9,16 @@ spring:
         server-addr: localhost:8848
         username: nacos
         password: nacos
+  thymeleaf:
+    mode: HTML
+    cache: false #关闭缓存，不然修改会立即生效，在生产环境可配置为true
+#关闭thymeleaf缓存
+#  thymeleaf:
+#    mode: HTML
+#    cache: false
+#  # i18n 国际化
+#  messages:
+#    basename: i18n.messages # 设置国际化文件的存储位置  默认是 messages
 
 logging:
   level:

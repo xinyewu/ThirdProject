@@ -13,10 +13,7 @@
         <module>res_food</module>
         <module>res_order</module>
         <module>res_api</module>
-        <module>test_builderDesignPattern_fluentAPI</module>
-        <module>test_sentinel3</module>
         <module>res_gateway</module>
-        <module>test_responsibilityChainPattern</module>
         <module>res-index</module>
         <module>res-user</module>
     </modules>
