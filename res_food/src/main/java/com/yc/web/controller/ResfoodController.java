@@ -3,6 +3,7 @@ package com.yc.web.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.yc.bean.Resfood;
 import com.yc.biz.ResfoodBizImpl;
 import com.yc.config.RedisKeys;
 import com.yc.web.model.MyPageBean;
@@ -122,14 +123,6 @@ public class ResfoodController {
 
     @RequestMapping(value = "findPage", method = {RequestMethod.GET, RequestMethod.POST})
     @SentinelResource(value = "hotkey-page")
-    //@SentinelResource(value = "hotkey-page", blockHandler = "handleBlock", fallback = "exceptionFallback")  //流控资源名
-    // @ApiOperation(value = "分页查询操作")
-    //@ApiImplicitParams({
-    //        @ApiImplicitParam(name = "pageno", value = "页号", required = true),
-    //        @ApiImplicitParam(name = "pagesize", value = "每页记录数", required = true),
-    //       @ApiImplicitParam(name = "sortby", value = "排序列", required = false),
-    //      @ApiImplicitParam(name = "sort", value = "排序方式", required = false)
-    //  })
     public Map<String, Object> findByPage(@RequestParam("pageno") int pageno, @RequestParam("pagesize") int pagesize, @RequestParam(required = false) String sortby, @RequestParam(required = false) String sort) {
 //        Boolean f = true;
 //        if (f) {
@@ -151,5 +144,15 @@ public class ResfoodController {
         map.put("data", page);
         return map;
         //return resfoodBiz.findByPage(pageno, pagesize, sortby, sort);
+    }
+
+    @RequestMapping(value = "addNewFood", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> addResfood(@RequestParam Resfood food) {
+        Map<String, Object> map = new HashMap<>();
+        if (resfoodBiz.addResfood(food)>=1){
+            map.put("code", 1);
+            map.put("msg", "上传新菜成功");
+        }
+        return map;
     }
 }

@@ -13,4 +13,8 @@ public class boardController {
     public String gotoNewFood(){
         return "newfood";
     }
+    @GetMapping("/updateFood")
+    public String gotoUpdateFood(){
+        return "updatefood";
+    }
 }

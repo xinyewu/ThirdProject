@@ -1,11 +1,11 @@
 package com.yc.web.controller;
 
+import com.yc.api.ResfoodApi;
 import com.yc.bean.Resfood;
 import com.yc.biz.FastDFSBiz;
-import com.yc.biz.ResfoodBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,15 +15,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/resfood/back/")//localhost:9000/resfood/+xxx
+@RequestMapping("/resadmin/")//localhost:9000/resfood/+xxx
 @Slf4j
 public class BackResfoodController {
 
     @Autowired
     private FastDFSBiz fastDFSBiz;//fastDFS文件服务器 1.依赖， 2.bootstrap 配置
     @Autowired
-    private ResfoodBiz resfoodBiz;//操作数据库
+    private ResfoodApi resfoodApi;//操作数据库
 
+    @PostMapping("/test")
+    public Map<String, Object> addNewFood(MultipartFile fphoto) {
+        Map<String, Object> map = new HashMap<>();
+        String s = fastDFSBiz.uploadFile(fphoto);
+        map.put("code",1);
+        map.put("obj",s);
+        return map;
+    }
     @RequestMapping(value = "/addNewFood", method = {RequestMethod.POST})
     public Map<String, Object> addNewFood(String fname, Double normprice, Double realprice, String detail, MultipartFile fphoto) {
         Map<String, Object> map = new HashMap<>();
@@ -40,7 +48,7 @@ public class BackResfoodController {
             resfood.setRealprice(realprice);
             resfood.setDetail(detail);
             resfood.setFphoto(path);
-            resfoodBiz.addResfood(resfood);
+            resfoodApi.addNewFood(resfood);
         }catch (Exception e){
             e.printStackTrace();
             map.put("code",0);

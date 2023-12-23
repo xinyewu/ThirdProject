@@ -2,6 +2,7 @@ package com.yc.api;
 
 
 import com.yc.api.configuration.ResfoodApiConfiguration;
+import com.yc.bean.Resfood;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,4 +20,7 @@ public interface ResfoodApi {
 
     @RequestMapping(value = "resfood/findPage", method = {RequestMethod.GET})
     public Map<String, Object> findByPage(@RequestParam("pageno") int pageno, @RequestParam("pagesize") int pagesize, @RequestParam(required = false) String sortby, @RequestParam(required = false) String sort);
+
+    @RequestMapping(value = "resfood/addNewFood", method = {RequestMethod.GET})
+    public Map<String, Object> addNewFood(@RequestParam Resfood food);
 }
