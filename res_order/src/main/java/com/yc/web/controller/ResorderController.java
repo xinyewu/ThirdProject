@@ -181,4 +181,39 @@ public class ResorderController {
         return map;
     }
 
+    @RequestMapping(value = "findAll", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> findAll() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", resorderBiz.findAll());
+        map.put("code", 1);
+        return map;
+    }
+
+    @RequestMapping(value = "updateByRoid", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> deleteByRoid(@RequestParam Integer roid) {
+        Map<String, Object> map = new HashMap<>();
+        int i = resorderBiz.updateByRoid(roid);
+        if (i <= 0) {
+            map.put("code", 0);
+            map.put("msg", "发货错误");
+        } else {
+            map.put("code", 1);
+            map.put("msg", "成功发货");
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "drawback", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> drawback(@RequestParam Integer roid) {
+        Map<String, Object> map = new HashMap<>();
+        int i = resorderBiz.drawback(roid);
+        if (i <= 0) {
+            map.put("code", 0);
+            map.put("msg", "退款出错");
+        } else {
+            map.put("code", 1);
+            map.put("msg", "成功退款");
+        }
+        return map;
+    }
 }

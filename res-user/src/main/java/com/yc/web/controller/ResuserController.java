@@ -89,6 +89,5 @@ public class ResuserController {
             map.put("code",0);
         }
         return map;
-
     }
 }

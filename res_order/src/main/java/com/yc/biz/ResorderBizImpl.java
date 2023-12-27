@@ -1,5 +1,6 @@
 package com.yc.biz;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yc.bean.Resorder;
 import com.yc.bean.Resorderitem;
 import com.yc.bean.Resuser;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -41,5 +43,31 @@ public class ResorderBizImpl implements ResorderBiz {
             resorderitemMapper.insert(resorderitem);
         }
         return 0;
+    }
+
+    @Override
+    public List<Resorder> findAll() {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.orderByDesc("roid");
+        wrapper.notIn("status",1,3,4);//0待发货 2待退款 1已发货 3已收货 4退款成功
+        return resorderMapper.selectList(wrapper);
+    }
+
+    @Override
+    public int updateByRoid(Integer roid) {
+        QueryWrapper wrapper = new QueryWrapper();
+        Resorder resorder=new Resorder();
+        resorder.setStatus(1);//订单发货
+        wrapper.eq("roid", roid);
+        return resorderMapper.update(resorder,wrapper);
+    }
+
+    @Override
+    public int drawback(Integer roid) {
+        QueryWrapper wrapper=new QueryWrapper();
+        Resorder resorder=new Resorder();
+        resorder.setStatus(4);//给用户退款
+        wrapper.eq("roid", roid);
+        return resorderMapper.update(resorder,wrapper);
     }
 }
