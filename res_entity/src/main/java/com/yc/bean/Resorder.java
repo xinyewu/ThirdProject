@@ -21,5 +21,5 @@ public class Resorder implements Serializable {
     private String deliverytime;
     private String ps;
     private Integer status ;
-
+    private String stars;
 }

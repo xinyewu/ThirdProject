@@ -16,4 +16,6 @@ public interface ResorderBiz {
     public int updateByRoid(Integer roid);
     //给用户退款
     public int drawback(Integer roid);
+    //根据用户id查订单
+    public List<Resorder>findByUid(Integer userid);
 }

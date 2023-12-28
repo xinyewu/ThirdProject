@@ -17,6 +17,7 @@ public class Resuser implements Serializable {
     private String username;
     private String pwd ;
     private String email;
+    private String status;
     //为了与页面传过来的属性yzm对应，在这里增加一个验证码
     @TableField(exist = false)
     private String yzm; //同时又是一个vo

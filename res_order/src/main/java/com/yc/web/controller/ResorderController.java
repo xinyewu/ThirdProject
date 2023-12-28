@@ -216,4 +216,12 @@ public class ResorderController {
         }
         return map;
     }
+
+    @RequestMapping(value = "findByUid", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> findByUid(@RequestParam Integer userid) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("data", resorderBiz.findByUid(userid));
+        map.put("code", 1);
+        return map;
+    }
 }

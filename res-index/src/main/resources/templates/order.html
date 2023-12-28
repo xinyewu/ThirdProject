@@ -33,17 +33,17 @@
                         <template slot-scope="props">
                             <el-form label-position="left" inline class="demo-table-expand">
                                 <div v-for=" i in props.row.children">
-                                    <el-form-item label="菜品名称">
+                                    <el-form-item label="菜品名称:">
                                         <span>{{ i.fname }}</span>
                                     </el-form-item>
-                                    <el-form-item label="菜品单价">
+                                    <el-form-item label="菜品单:">
                                         <span>{{ i.realprice }}</span>
                                     </el-form-item>
-                                    <el-form-item label="菜品数量">
+                                    <el-form-item label="菜品数量:">
                                         <span>{{ i.num }}</span>
                                     </el-form-item>
                                 </div>
-                                <el-form-item label="总价">
+                                <el-form-item label="总价:">
                                     <span >{{ totalSumAll(props.row.children) }}</span>
                                 </el-form-item>
                             </el-form>

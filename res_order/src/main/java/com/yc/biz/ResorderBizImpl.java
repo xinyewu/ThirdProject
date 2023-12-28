@@ -70,4 +70,12 @@ public class ResorderBizImpl implements ResorderBiz {
         wrapper.eq("roid", roid);
         return resorderMapper.update(resorder,wrapper);
     }
+
+    @Override
+    public List<Resorder> findByUid(Integer userid) {
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("userid",userid);
+        wrapper.eq("status",3);//是这个用户且订单已经签收完成
+        return resorderMapper.selectList(wrapper);
+    }
 }

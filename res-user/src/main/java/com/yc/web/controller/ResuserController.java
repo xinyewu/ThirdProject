@@ -1,14 +1,17 @@
 package com.yc.web.controller;
 
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.yc.bean.Resuser;
 import com.yc.biz.ResuserBizImpl;
+import com.yc.web.model.MyPageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -90,4 +93,26 @@ public class ResuserController {
         }
         return map;
     }
+    @RequestMapping(value = "findAll", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> findAll() {
+        Map<String,Object>map=new HashMap<>();
+        map.put("data", resuserBiz.findAll());
+        map.put("code", 1);
+        return map;
+    }
+
+    @RequestMapping(value = "upStatus", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> upStatus(@RequestParam Integer userid,@RequestParam String username,@RequestParam String pwd) {
+        Map<String,Object>map=new HashMap<>();
+        int i= resuserBiz.upStatus(userid,username,pwd);
+        if (i<=0){
+            map.put("code", 0);
+            map.put("msg","拉黑失败");
+        }else {
+            map.put("code", 1);
+            map.put("msg","拉黑成功");
+        }
+        return map;
+    }
+
 }
