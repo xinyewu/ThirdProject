@@ -31,9 +31,8 @@
                     <el-table-column prop="fphoto" label="菜品图" width="191"></el-table-column>
                     <el-table-column fixed="right" label="操作" width="191" style="text-align: center;">
                         <template slot-scope="scope" style="justify-items: center;display: flex">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">下架</el-button>
+                            <el-button @click="upfood(scope.row)" type="text" size="small"><a th:href="@{/upfood}">修改</a></el-button>
+                            <el-button @click="deleteResfood(scope.row)" type="text" size="small">下架</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -56,9 +55,27 @@
             //计算属性
         },
         methods: {
+            upfood(resfood){
+                localStorage.setItem("fname",resfood.fname);
+                localStorage.setItem("normprice",resfood.normprice);
+                localStorage.setItem("realprice",resfood.realprice);
+                localStorage.setItem("detail",resfood.detail);
+                localStorage.setItem("fphoto",resfood.fphoto);
+                localStorage.setItem("fid",resfood.fid);
+            },
             findAll() {
                 axios.get("resfood/findAll").then(res => {
                     this.tableData = res.data.data;
+                })
+            },
+            deleteResfood(i){
+                axios.get("resfood/deleteResfood",{
+                    params:{
+                        fid:i.fid
+                    }
+                }).then(res=>{
+                    this.$message(res.data.msg)
+                    this.findAll();
                 })
             }
         },

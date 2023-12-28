@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("resuser/resadmin")
+@RequestMapping("resadmin")
 @Slf4j
 
 public class ResadminController {

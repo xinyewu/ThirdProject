@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header(~{::title})">
+    <meta charset="UTF-8">
+    <title>菜品管理</title>
+</head>
+<body>
+<div th:replace="layout/body::public"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="layout/body :: public1"></div>
+        <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">修改菜品</h1>
+            <form role="form">
+                <div class="forn-group">
+                    <label for="fname">菜品名</label>
+                    <input type="text" class="form-control" id="fname" placeholder="新菜品名" v-model="fname"></div>
+                <div class="forn-group">
+                    <label for="normprice">原价</label>
+                    <input type="text" class="form-control" id="normprice" placeholder="原价" v-model="normprice"></div>
+                <div class="forn-group">
+                    <label for="realprice">成交价</label>
+                    <input type="text" class="form-control" id="realprice" placeholder="成交价" v-model="realprice"></div>
+                <div class="forn-group">
+                    <label for="fphoto">菜品图</label>
+                    <input type="file" id="fphoto"></div>
+                <div class="forn-group">
+                    <label for="detail">菜品详情</label>
+                    <textarea rows="5" cols="50" id="detail" v-model="detail"></textarea>
+                </div>
+                <button type="button" class="btn btn-default" @click="upFood()">确认</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            fname: '新菜品',
+            normprice: 20.0,
+            realprice: 10.0,
+            detail: '好吃...',
+            fphoto:'',
+        },
+        computed: {
+            //计算属性
+        },
+        methods: {
+            first:function (){
+              this.fname=localStorage.getItem("fname");
+              this.normprice=localStorage.getItem("normprice");
+              this.realprice=localStorage.getItem("realprice");
+              this.detail=localStorage.getItem("detail");
+             this.fphoto=localStorage.getItem("fphoto");
+            },
+            upFood: function () {
+                //提交方式必须为post，且要指定Content-Type:multipart/form-data
+                var fphoto = document.querySelector("#fphoto").files[0];//拿到选择的文件
+                //创建formdata对象
+                var formdata = new FormData();
+                formdata.append("fphoto", fphoto);//文件对象
+                //其他参数
+                formdata.append("fid", localStorage.getItem("fid"));
+                formdata.append("normprice", this.normprice);
+                formdata.append("realprice", this.realprice);
+                formdata.append("detail", this.detail);
+                //设定 Content-Type
+                const config = {
+                    headers: {"Content-Type": "multipart/form-data"}
+                };
+                //调用axios发送，注意post请求
+                axios({
+                    url: "/resadmin/upfood",
+                    method: "post",
+                    data: formdata,
+                    headers: config.headers
+                }).then(result=>{
+                    var jsonModel=result.data;
+                    if (jsonModel.code==1){
+                        alert(jsonModel.msg);
+                    }
+                });
+            }
+        },
+        created: function () {
+            this.first();
+        }
+    });
+</script>
+</html>

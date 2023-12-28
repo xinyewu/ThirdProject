@@ -49,7 +49,7 @@
                 var params = new URLSearchParams();
                 params.append('raname', _this.raname);
                 params.append('rapwd', _this.rapwd);
-                axios.post("resuser/resadmin/login", params).then(result => {
+                axios.post("resadmin/login", params).then(result => {
                     var data = result.data;
                     if (data.code == 1) {
                         alert("管理员登录成功");

@@ -14,5 +14,8 @@ public interface ResfoodBiz {
     public MyPageBean findByPage(int pageno, int pagesize, String sortby, String sort);
 
     public Integer addResfood(Resfood food);
-
+    //下架菜品根据菜品fid
+    public int deleteResfood(Integer fid);
+    //更新菜品
+    public Integer upResFood(Resfood resfood);
 }

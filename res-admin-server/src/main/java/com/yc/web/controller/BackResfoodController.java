@@ -5,7 +5,6 @@ import com.yc.bean.Resfood;
 import com.yc.biz.FastDFSBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,19 +23,11 @@ public class BackResfoodController {
     @Autowired
     private ResfoodApi resfoodApi;//操作数据库
 
-    @PostMapping("/test")
-    public Map<String, Object> addNewFood(MultipartFile fphoto) {
-        Map<String, Object> map = new HashMap<>();
-        String s = fastDFSBiz.uploadFile(fphoto);
-        map.put("code",1);
-        map.put("obj",s);
-        return map;
-    }
     @RequestMapping(value = "/addNewFood", method = {RequestMethod.POST})
     public Map<String, Object> addNewFood(String fname, Double normprice, Double realprice, String detail, MultipartFile fphoto) {
         Map<String, Object> map = new HashMap<>();
         Resfood resfood = new Resfood();
-        try{
+        try {
             //步骤一 ：将图片上传到fastDfs中，返回图片地址，拼接
             //http://storage服务器中的Nginx:8888+ group1/M00/00/00/rBIABWVLayaAbqu_AAOA1dwT4AY608.jpg
             //以配置文件形式在springboot配置   存到数据resfood表中fphoto
@@ -49,14 +40,37 @@ public class BackResfoodController {
             resfood.setDetail(detail);
             resfood.setFphoto(path);
             resfoodApi.addNewFood(resfood);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            map.put("code",0);
-            map.put("msg",e.getMessage());
+            map.put("code", 0);
+            map.put("msg", e.getMessage());
             return map;
         }
-        map.put("code",1);
-        map.put("obj",resfood);
+        map.put("code", 1);
+        map.put("obj", resfood);
         return map;
     }
+
+    @RequestMapping(value = "/upfood", method = {RequestMethod.POST})
+    public Map<String, Object> upFood(Integer fid, Double normprice, Double realprice, String detail, MultipartFile fphoto) {
+        Map<String, Object> map = new HashMap<>();
+        Resfood resfood = new Resfood();
+        try {
+            String path = this.fastDFSBiz.uploadFile(fphoto);
+            resfood.setFid(fid);
+            resfood.setNormprice(normprice);
+            resfood.setRealprice(realprice);
+            resfood.setDetail(detail);
+            resfood.setFphoto(path);
+            map.put("msg", resfoodApi.upfood(resfood).get("msg"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 0);
+            map.put("msg", e.getMessage());
+            return map;
+        }
+        map.put("code", 1);
+        return map;
+    }
+
 }

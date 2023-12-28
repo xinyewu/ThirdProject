@@ -101,4 +101,20 @@ public class ResfoodBizImpl implements ResfoodBiz {
         return this.resFoodMapper.insert(food);
     }
 
+    @Transactional(readOnly = false)
+    @Override
+    public int deleteResfood(Integer fid) {
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("fid",fid);
+        return resFoodMapper.delete(wrapper);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Integer upResFood(Resfood resfood) {
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("fid",resfood.getFid());
+        return resFoodMapper.update(resfood,wrapper);
+    }
+
 }

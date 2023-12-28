@@ -2,7 +2,6 @@ package com.yc.web.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.yc.bean.Resfood;
 import com.yc.biz.ResfoodBizImpl;
 import com.yc.config.RedisKeys;
@@ -147,12 +146,43 @@ public class ResfoodController {
     }
 
     @RequestMapping(value = "addNewFood", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> addResfood(@RequestParam Resfood food) {
+    public Map<String, Object> addResfood(@RequestBody Resfood food) {
         Map<String, Object> map = new HashMap<>();
+        System.out.println(food);
         if (resfoodBiz.addResfood(food)>=1){
             map.put("code", 1);
             map.put("msg", "上传新菜成功");
+        }else {
+            map.put("code", 0);
+            map.put("msg", "上传新菜失败");
         }
         return map;
     }
+
+    @RequestMapping(value = "deleteResfood", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> deleteResfood(@RequestParam Integer fid) {
+        Map<String, Object> map = new HashMap<>();
+        if (resfoodBiz.deleteResfood(fid)>=1){
+            map.put("code", 1);
+            map.put("msg", "下架菜品成功");
+        }else {
+            map.put("code", 0);
+            map.put("msg", "下架菜品失败");
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "upfood", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> upResFood(@RequestBody Resfood resfood) {
+        Map<String, Object> map = new HashMap<>();
+        if (resfoodBiz.upResFood(resfood)>=1){
+            map.put("code", 1);
+            map.put("msg", "修改菜品成功");
+        }else {
+            map.put("code", 0);
+           map.put("msg", "修改菜品失败");
+        }
+        return map;
+    }
+
 }

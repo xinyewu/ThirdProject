@@ -21,6 +21,9 @@ public interface ResfoodApi {
     @RequestMapping(value = "resfood/findPage", method = {RequestMethod.GET})
     public Map<String, Object> findByPage(@RequestParam("pageno") int pageno, @RequestParam("pagesize") int pagesize, @RequestParam(required = false) String sortby, @RequestParam(required = false) String sort);
 
-    @RequestMapping(value = "resfood/addNewFood", method = {RequestMethod.GET})
-    public Map<String, Object> addNewFood(@RequestParam Resfood food);
+    @RequestMapping(value = "resfood/addNewFood", method = {RequestMethod.POST})
+    public Map<String, Object> addNewFood(@RequestBody Resfood food);
+
+    @RequestMapping(value = "resfood/upfood", method = {RequestMethod.POST})
+    public Map<String, Object> upfood(@RequestBody Resfood resfood);
 }

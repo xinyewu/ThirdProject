@@ -21,4 +21,12 @@ public class boardController {
     public String gotoOrder(){
         return "order";
     }
+    @GetMapping("/upfood")
+    public String gotoUpfood(){
+        return "upfood";
+    }
+    @GetMapping("/user")
+    public String gotoUser(){
+        return "user";
+    }
 }

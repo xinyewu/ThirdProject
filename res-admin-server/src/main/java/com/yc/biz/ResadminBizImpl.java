@@ -21,6 +21,5 @@ public class ResadminBizImpl implements ResadminBiz{
         wrapper.eq("rapwd",rapwd);
         Resadmin resadmin = resadminMapper.selectOne(wrapper);
         return resadmin;
-
     }
 }
