@@ -2888,3 +2888,89 @@ Consider defining a bean of type 'com.yc.dao.ResadminMapper' in your configurati
 2023-12-28 17:03:24.521  WARN 25152 --- [Thread-3] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Start destroying common HttpClient
 2023-12-28 17:03:24.521  WARN 25152 --- [Thread-10] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Start destroying Publisher
 2023-12-28 17:03:24.521  WARN 25152 --- [Thread-10] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Destruction of the end
+2023-12-28 17:03:52.851  INFO 8396 --- [main] com.yc.ResAdminApp                       : The following 1 profile is active: "prod"
+2023-12-28 17:03:53.565  INFO 8396 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2023-12-28 17:03:53.567  INFO 8396 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 17:03:53.583  INFO 8396 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2023-12-28 17:03:53.739  INFO 8396 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2a185c27-a023-3f59-a44b-3f91fe9af9c1
+2023-12-28 17:03:54.085  INFO 8396 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8031 (http)
+2023-12-28 17:03:54.195  INFO 8396 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1330 ms
+2023-12-28 17:03:54.311  INFO 8396 --- [main] c.a.d.s.b.a.DruidDataSourceAutoConfigure : Init DruidDataSource
+2023-12-28 17:03:54.799  INFO 8396 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2023-12-28 17:03:55.857  INFO 8396 --- [main] o.s.c.openfeign.FeignClientFactoryBean   : For 'resfood' URL not provided. Will try picking an instance via load-balancing.
+2023-12-28 17:03:56.020  INFO 8396 --- [main] c.a.c.sentinel.SentinelWebMvcConfigurer  : [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+2023-12-28 17:03:57.914  WARN 8396 --- [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2023-12-28 17:03:57.919  INFO 8396 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 21 endpoint(s) beneath base path '/actuator'
+2023-12-28 17:03:57.994  INFO 8396 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8031 (http) with context path ''
+2023-12-28 17:03:58.005  INFO 8396 --- [main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+2023-12-28 17:03:58.005  INFO 8396 --- [main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+2023-12-28 17:03:58.127  INFO 8396 --- [main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP resadmin 192.168.16.4:8031 register finished
+2023-12-28 17:03:58.444  INFO 8396 --- [main] s.a.ScheduledAnnotationBeanPostProcessor : No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2023-12-28 17:03:58.450  INFO 8396 --- [main] com.yc.ResAdminApp                       : Started ResAdminApp in 8.198 seconds (JVM running for 8.937)
+2023-12-28 17:03:58.463  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=res-admin.yml, group=DEFAULT_GROUP
+2023-12-28 17:03:58.469  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=mysql8local.yml, group=DEFAULT_GROUP
+2023-12-28 17:03:58.476  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=redislocal.yml, group=DEFAULT_GROUP
+2023-12-28 17:03:58.482  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=res-admin-prod.yml, group=DEFAULT_GROUP
+2023-12-28 17:03:58.483  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=res-admin, group=DEFAULT_GROUP
+2023-12-28 17:03:58.488  INFO 8396 --- [main] c.a.c.n.refresh.NacosContextRefresher    : [Nacos Config] Listening config: dataId=fastDFS.yml, group=DEFAULT_GROUP
+2023-12-28 17:03:58.793  INFO 8396 --- [RMI TCP Connection(2)-192.168.16.4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-12-28 17:03:58.796  INFO 8396 --- [RMI TCP Connection(2)-192.168.16.4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2023-12-28 17:04:08.998  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-ch-ua,对应的值为："Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"
+2023-12-28 17:04:08.998  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:accept,对应的值为：application/json, text/plain, */*
+2023-12-28 17:04:08.998  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-ch-ua-mobile,对应的值为：?0
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:user-agent,对应的值为：Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-ch-ua-platform,对应的值为："Windows"
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-fetch-site,对应的值为：same-origin
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-fetch-mode,对应的值为：cors
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:sec-fetch-dest,对应的值为：empty
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:referer,对应的值为：http://localhost:20001/updateFood
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:accept-encoding,对应的值为：gzip, deflate, br
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:accept-language,对应的值为：zh-CN,zh;q=0.9
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:cookie,对应的值为：Idea-6c97dcf4=943c95ac-9a0a-400d-a31b-48c5c33cb0b9; SESSION=NWZjMTI0OGQtNTRhMi00Mjc1LWE5MTktYjExN2RjNTc2MjFk
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:token,对应的值为：123
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:forwarded,对应的值为：proto=http;host="localhost:20001";for="[0:0:0:0:0:0:0:1]:56984"
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:x-forwarded-for,对应的值为：0:0:0:0:0:0:0:1
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:x-forwarded-proto,对应的值为：http
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:x-forwarded-port,对应的值为：20001
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:x-forwarded-host,对应的值为：localhost:20001
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:host,对应的值为：192.168.16.4:9200
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 接到对header:content-length,对应的值为：0
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 收到origin:blank
+2023-12-28 17:04:08.999  INFO 30052 --- [http-nio-9200-exec-5] com.yc.config.HeaderOriginParser         : 收到token:123
+2023-12-28 17:11:42.787  INFO 3792 --- [main] com.yc.ResAdminApp                       : The following 1 profile is active: "prod"
+2023-12-28 17:11:43.599  INFO 3792 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2023-12-28 17:11:43.601  INFO 3792 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-12-28 17:11:43.617  INFO 3792 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2023-12-28 17:11:43.742  WARN 3792 --- [main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.yc]' package. Please check your configuration.
+2023-12-28 17:11:43.789  INFO 3792 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=08b86437-dafa-3dd5-b0fa-3f8adbf7adee
+2023-12-28 17:11:44.188  INFO 3792 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8031 (http)
+2023-12-28 17:11:44.297  INFO 3792 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1496 ms
+2023-12-28 17:11:44.475  INFO 3792 --- [main] c.a.d.s.b.a.DruidDataSourceAutoConfigure : Init DruidDataSource
+2023-12-28 17:11:44.980  INFO 3792 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2023-12-28 17:11:45.394  WARN 3792 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'resadminBizImpl': Unsatisfied dependency expressed through field 'resadminMapper'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.yc.dao.ResadminMapper' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2023-12-28 17:11:45.411  INFO 3792 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2023-12-28 17:11:45.415  INFO 3792 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2023-12-28 17:11:45.430  INFO 3792 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-12-28 17:11:45.449 ERROR 3792 --- [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field resadminMapper in com.yc.biz.ResadminBizImpl required a bean of type 'com.yc.dao.ResadminMapper' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.yc.dao.ResadminMapper' in your configuration.
+
+2023-12-28 17:11:46.124  WARN 3792 --- [Thread-10] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Start destroying Publisher
+2023-12-28 17:11:46.124  WARN 3792 --- [Thread-3] c.a.n.common.http.HttpClientBeanHolder   : [HttpClientBeanHolder] Start destroying common HttpClient
+2023-12-28 17:11:46.125  WARN 3792 --- [Thread-10] c.a.nacos.common.notify.NotifyCenter     : [NotifyCenter] Destruction of the end
