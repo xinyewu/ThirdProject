@@ -16,17 +16,18 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOriginPattern: "*"
+            allowCredentials: true
+            allowedOriginPatterns: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
-            allowCredentials: true
+        add-to-simple-url-handler-mapping: true
 
       routes: #查看配置源码 ：routes是一个list 集合（有序）
         - id: res_food
           #uri: http://localhost:9200 #http://localhost:9200/resfood/findAll
           uri: lb://resfood     #lb代表loadbalance     resfood服务名-》利用loadbalance保存的服务名获取一台
           predicates: #PathRoutePredicateFactory
-            - Path=/resfood/**  #http://localhost:20001/resfood/findAll
+            - Path=/resfood/** #http://localhost:20001/resfood/findAll
 #            - After=2023-12-19T17:15:47.789+08:00[Asia/Shanghai]
             - ServiceTimeBetween=上午06:00,下午10:00  #测试addCart服务时间段控制
           filters:

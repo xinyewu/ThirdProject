@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ResfoodBiz {
     public List<Resfood> findAll();
+    public List<Resfood> findAll1();
 
     public Resfood findById(Integer fid);
 

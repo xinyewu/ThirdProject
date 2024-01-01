@@ -80,6 +80,14 @@ public class ResfoodController {
         map.put("code", 1);
         return map;
     }
+    @RequestMapping(value = "findAll1", method = {RequestMethod.GET, RequestMethod.POST})
+    // @ApiOperation(value = "查询所有菜品")
+    public Map<String, Object> findAl1l() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", resfoodBiz.findAll1());
+        map.put("code", 1);
+        return map;
+    }
 
     private Map<String, Object> handleBlockForFindByID(Integer fid, BlockException exception) {
         exception.printStackTrace();//控制台中输出异常堆栈信息

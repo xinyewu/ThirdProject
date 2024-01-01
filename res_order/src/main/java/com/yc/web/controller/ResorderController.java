@@ -1,14 +1,18 @@
 package com.yc.web.controller;
 
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.yc.bean.Resorderitem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yc.api.ResfoodApi;
 import com.yc.bean.Resfood;
 import com.yc.bean.Resorder;
 import com.yc.bean.Resuser;
 import com.yc.biz.GoodsBiz;
+import com.yc.biz.ResOrderItemBiz;
 import com.yc.biz.ResorderBiz;
 import com.yc.web.model.CartItem;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.ognl.IntHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -16,10 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 @RestController
@@ -32,6 +33,8 @@ public class ResorderController {
     private ResfoodApi resfoodApi;
     @Autowired
     private ResorderBiz resorderBiz;
+    @Autowired
+    private ResOrderItemBiz resOrderItemBiz;
     @Autowired
     private GoodsBiz goodsBiz;
 
@@ -218,10 +221,72 @@ public class ResorderController {
     }
 
     @RequestMapping(value = "findByUid", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> findByUid(@RequestParam Integer userid) {
+    public Map<String, Object> findByUid(@RequestParam Integer userid,@RequestParam("pageno") int pageno, @RequestParam("pagesize") int pagesize, @RequestParam(required = false) String sortby, @RequestParam(required = false) String sort) {
         Map<String,Object>map=new HashMap<>();
-        map.put("data", resorderBiz.findByUid(userid));
+        if (sort.equals("")||sort.isEmpty()&&sortby.equals("")||sortby.isEmpty()){
+            sort = "desc";
+            sortby = "fid";
+        }
+        map.put("data", resorderBiz.findByUid(userid,pageno, pagesize, sortby, sort));
         map.put("code", 1);
         return map;
+    }
+
+    @RequestMapping(value = "findOrder", method = {RequestMethod.GET, RequestMethod.POST})
+    public List<Map<String ,Object>> findItemByFid(@RequestParam Integer fid,@RequestParam String year) {
+        List<Map<String ,Object>> list = new ArrayList<>();
+        list=resorderBiz.findOrder(fid,year);
+        if (list.size()<=0){
+            Map<String ,Object>map=new HashMap<>();
+            map.put("code",0);
+            map.put("msg","查询失败");
+            list.add(map);
+        }else{
+            for (int i = 0; i < list.size(); i++) {
+                Map<String ,Object>map=new HashMap<>();
+                String month= (String) list.get(i).get("name");
+                month=month+"月";
+                map.put("name",month);
+                map.put("value",list.get(i).get("value"));
+                list.set(i,map);
+            }
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "findMonths", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> findMonths() {
+        Map<String,Object>map=new HashMap<>();
+        List<String> l= resorderBiz.findMonths();
+        if (l.size()<=0){
+            map.put("code", 0);
+            map.put("msg","查询全部年份出错");
+        }else {
+            map.put("code", 1);
+            map.put("data",l);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "findMoney", method = {RequestMethod.GET, RequestMethod.POST})
+    public List<Map<String ,Object>> findMoney(@RequestParam String year) {
+        List<Map<String ,Object>> list = new ArrayList<>();
+        list= resorderBiz.findMoney(year);
+        if (list.size()<=0){
+            Map<String ,Object>map=new HashMap<>();
+            map.put("code",0);
+            map.put("msg","查询失败");
+            list.add(map);
+        }else{
+            for (int i = 0; i < list.size(); i++) {
+                Map<String ,Object>map=new HashMap<>();
+                String month= (String) list.get(i).get("name");
+                month=month+"月";
+                map.put("name",month);
+                map.put("value",list.get(i).get("value"));
+                list.set(i,map);
+            }
+        }
+        return list;
     }
 }

@@ -31,12 +31,12 @@
 <div th:fragment="public1">
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-            <li class="active"><a th:href="@{/adminBoard}">Overview <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a th:href="@{/adminBoard}">终台 <span class="sr-only">(current)</span></a></li>
             <li><a th:href="@{/newfood}">新菜上架</a></li>
             <li><a th:href="@{/updateFood}">菜品修改</a></li>
             <li><a th:href="@{/order}">订单管理</a></li>
             <li><a th:href="@{/user}">用户管理</a></li>
-            <li><a href="#">报表</a></li>
+            <li><a th:href="@{/report}">报表</a></li>
         </ul>
     </div>
 </div>

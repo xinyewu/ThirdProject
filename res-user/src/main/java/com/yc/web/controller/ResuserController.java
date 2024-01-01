@@ -72,6 +72,10 @@ public class ResuserController {
             map.put("code", -3);
             map.put("msg", "用户名或密码错误");
             return map;
+        }else if (ru.getStatus().equals("1")){
+            map.put("code", 0);
+            map.put("msg", "您的账号已被拉黑");
+            return map;
         }
         //成功，则code=1
         map.put("code", 1);

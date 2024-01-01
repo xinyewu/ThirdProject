@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ResfoodBizImpl implements ResfoodBiz {
     @Value("${nginx.address}")
-    private String nginxAddress="http://localhost:8888/";
+    private String nginxAddress = "http://localhost:8888/";
     @Autowired
     private ResFoodMapper resFoodMapper;
 
@@ -34,6 +34,15 @@ public class ResfoodBizImpl implements ResfoodBiz {
     public List<Resfood> findAll() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.orderByDesc("fid");
+        wrapper.eq("status", 0);
+        return resFoodMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<Resfood> findAll1() {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.orderByDesc("fid");
+        wrapper.eq("status", 1);
         return resFoodMapper.selectList(wrapper);
     }
 
@@ -41,6 +50,7 @@ public class ResfoodBizImpl implements ResfoodBiz {
     public Resfood findById(Integer fid) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("fid", fid);
+        wrapper.eq("status", 0);
         Resfood resfood = resFoodMapper.selectOne(wrapper);
         return resfood;
     }
@@ -48,6 +58,7 @@ public class ResfoodBizImpl implements ResfoodBiz {
     @Override
     public MyPageBean findByPage(int pageno, int pagesize, String sortby, String sort) {
         QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("status", 0);
         if (sort.equalsIgnoreCase("desc")) {
             wrapper.orderByDesc(sortby);
         } else {
@@ -66,7 +77,7 @@ public class ResfoodBizImpl implements ResfoodBiz {
             for (Resfood rf : list) {
                 keys.add(RedisKeys.RESFOOD_DETAIL_COUNT_FID_ + rf.getFid());
             }
-           // 一次查询多个键的值（浏览数）
+            // 一次查询多个键的值（浏览数）
             List<Integer> allFoodDetailCountValues = redisTemplate.opsForValue().multiGet(keys);
             for (int i = 0; i < list.size(); i++) {
                 if (allFoodDetailCountValues.get(i) == null) {
@@ -74,7 +85,7 @@ public class ResfoodBizImpl implements ResfoodBiz {
                 } else {
                     list.get(i).setDetail_count(Long.valueOf(allFoodDetailCountValues.get(i).toString()));
                 }//再修改图片的地址
-                list.get(i).setFphoto(nginxAddress+list.get(i).getFphoto());
+                list.get(i).setFphoto(nginxAddress + list.get(i).getFphoto());
             }
             //还要查询 下订数
             myPageBean.setCode(1);
@@ -104,17 +115,19 @@ public class ResfoodBizImpl implements ResfoodBiz {
     @Transactional(readOnly = false)
     @Override
     public int deleteResfood(Integer fid) {
-        QueryWrapper wrapper=new QueryWrapper();
-        wrapper.eq("fid",fid);
-        return resFoodMapper.delete(wrapper);
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("fid", fid);
+        Resfood resfood = new Resfood();
+        resfood.setStatus("1");
+        return resFoodMapper.update(resfood,wrapper);
     }
 
     @Transactional(readOnly = false)
     @Override
     public Integer upResFood(Resfood resfood) {
-        QueryWrapper wrapper=new QueryWrapper();
-        wrapper.eq("fid",resfood.getFid());
-        return resFoodMapper.update(resfood,wrapper);
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("fid", resfood.getFid());
+        return resFoodMapper.update(resfood, wrapper);
     }
 
 }

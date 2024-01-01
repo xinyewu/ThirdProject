@@ -1,6 +1,8 @@
 package com.yc.biz;
 
+
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.yc.bean.Resorderitem;
 import com.yc.web.model.OrderItems;
 
 
@@ -11,4 +13,5 @@ public interface ResOrderItemBiz {
     public List<OrderItem> findByRoid(Integer roid);
     //通过订单roid查询订单所有商品
     public List<OrderItems>findItemByRoid(Integer roid);
+
 }

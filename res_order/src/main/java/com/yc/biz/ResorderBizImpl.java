@@ -1,7 +1,9 @@
 package com.yc.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yc.bean.Resorder;
+
 import com.yc.bean.Resorderitem;
 import com.yc.bean.Resuser;
 import com.yc.dao.ResorderMapper;
@@ -14,7 +16,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -49,33 +53,58 @@ public class ResorderBizImpl implements ResorderBiz {
     public List<Resorder> findAll() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.orderByDesc("roid");
-        wrapper.notIn("status",1,3,4);//0待发货 2待退款 1已发货 3已收货 4退款成功
+        wrapper.notIn("status", 1, 3, 4);//0待发货 2待退款 1已发货 3已收货 4退款成功
         return resorderMapper.selectList(wrapper);
     }
 
     @Override
     public int updateByRoid(Integer roid) {
         QueryWrapper wrapper = new QueryWrapper();
-        Resorder resorder=new Resorder();
+        Resorder resorder = new Resorder();
         resorder.setStatus(1);//订单发货
         wrapper.eq("roid", roid);
-        return resorderMapper.update(resorder,wrapper);
+        return resorderMapper.update(resorder, wrapper);
     }
 
     @Override
     public int drawback(Integer roid) {
-        QueryWrapper wrapper=new QueryWrapper();
-        Resorder resorder=new Resorder();
+        QueryWrapper wrapper = new QueryWrapper();
+        Resorder resorder = new Resorder();
         resorder.setStatus(4);//给用户退款
         wrapper.eq("roid", roid);
-        return resorderMapper.update(resorder,wrapper);
+        return resorderMapper.update(resorder, wrapper);
     }
 
     @Override
-    public List<Resorder> findByUid(Integer userid) {
-        QueryWrapper wrapper=new QueryWrapper();
-        wrapper.eq("userid",userid);
-        wrapper.eq("status",3);//是这个用户且订单已经签收完成
-        return resorderMapper.selectList(wrapper);
+    public Page findByUid(Integer userid, int pageno, int pagesize, String sortby, String sort) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("userid", userid);
+        wrapper.eq("status", 3);//是这个用户且订单已经签收完成
+        if (sort.equalsIgnoreCase("desc")) {
+            wrapper.orderByDesc(sortby);
+        } else {
+            wrapper.orderByAsc(sortby);
+        }
+        // 设置分页信息, 查第3页, 每页2条数据
+        Page<Resorder> page = new Page<>(pageno, pagesize);
+        Page page1 = resorderMapper.selectPage(page, wrapper);
+        // 执行分页查询
+        // 获取分页查询结果
+        return page1;
+    }
+
+    @Override
+    public List<Map<String, Object>> findOrder(Integer roid, String year) {
+        return resorderMapper.findOrder(roid, year);
+    }
+
+    @Override
+    public List<String> findMonths() {
+        return resorderMapper.findMonths();
+    }
+
+    @Override
+    public List<Map<String, Object>> findMoney(String year) {
+        return resorderMapper.findMoney(year);
     }
 }

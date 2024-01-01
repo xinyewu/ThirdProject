@@ -29,4 +29,12 @@ public class boardController {
     public String gotoUser(){
         return "user";
     }
+    @GetMapping("/report")
+    public String gotoReport(){
+        return "report";
+    }
+    @GetMapping("/admin")
+    public String gotoAdmin(){
+        return "admin";
+    }
 }

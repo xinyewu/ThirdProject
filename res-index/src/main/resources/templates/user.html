@@ -13,10 +13,10 @@
         <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">用户管理</h1>
             <template>
-                <el-table :data="tableData" height="600" border style="width: 100%">
+                <el-table :data="tableData" height="600" border style="width: 100%" @expand-change="up" :row-key="getRowKeys" :expand-row-keys="expands">
                     <el-table-column type="expand">
-                        <template slot-scope="props">
-                            <el-form label-position="left" inline class="demo-table-expand">
+                        <template slot-scope="props" >
+                            <el-form label-position="left" inline class="demo-table-expand" :key="itemKey">
                                 <div v-for=" i in props.row.children">
                                     <el-form-item label="订单号:">
                                         <span>{{i.roid }}</span>
@@ -26,13 +26,14 @@
                                     </el-form-item>
                                 </div>
                                 <div style="justify-content: center;display: flex;">
-                                    <a href="javascript:void" @click.prevent="clickPage(1,props.row.userid)" style="margin-right: 20px;">第一页</a>
+                                    <a href="javascript:void" @click.prevent="clickPage(2,props.row.userid)" style="margin-right: 20px;">第一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno-1,props.row.userid)" style="margin-right: 20px;">上一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno+1,props.row.userid)" style="margin-right: 20px;">下一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.totalpages,props.row.userid)" style="margin-right: 20px;">最后一页</a>
+                                   每页{{pagebean.pagesize}}条记录,共{{pagebean.totalpages}}页,当前第{{pagebean.pages}}页
                                 </div>
                                 <el-form-item label="总订单数:">
-                                    <span> {{totalSumAll(props.row.children)}}</span>
+                                    <span> {{pagebean.total}}</span>
                                 </el-form-item>
                             </el-form>
                         </template>
@@ -69,34 +70,79 @@
             tableData: [],
             pagebean: {
                 pageno: 2,
-                pagesize: 1,
-                pre: 1,
-                next: 1,
-                sortby: "fid",
+                pagesize: 3,
+                sortby: "userid",
                 sort: "desc",
-                total: 0,
-                totalpages: 0
+                totalpages: 0,
+                total:0,
+                pages:1
+            },
+            itemKey:0,
+            expands: [], // 只展开一行放入当前行id
+            getRowKeys: (row) => { // 获取当前行id
+                return row.userid; // 这里看这一行中需要根据哪个属性值是id
             }
+
         },
         computed: {
             //计算属性
-            totalSumAll() {
-                return function (m) {
-                    return m.length;
-                };
-            },
         },
         methods: {
-            clickPage: function (pageno,userid) {
-                if (pageno > this.pagebean.totalpages) {
-                    alert("当前就是最后一页")
+            up:function (row,expandedRows){
+                // 每次只展开一行
+                let that = this;
+                if (expandedRows.length) {
+                    that.expands = []
+                    if (row) {
+                        that.expands.push(row.userid)
+                    }
                 } else {
-                    var promise = this.showPage(pageno);// promise对象
-                    promise.then(result => {
-                        // this.displayPage(result.data.data);//result.data就是 jsonModel
-                        console.log(result.data)
-                    });
+                    that.expands = []
                 }
+
+                axios.get("resorder/findByUid", {
+                    params: {
+                        userid: row.userid,
+                        pageno: this.pagebean.pageno-1,
+                        pagesize: this.pagebean.pagesize,
+                        sortby: this.pagebean.sortby,
+                        sort: this.pagebean.sort,
+                    }
+                }).then(res => {
+                    for (let i = 0; i <this.tableData.length; i++) {
+                        if (this.tableData[i].userid==res.data.data.records[0].userid){
+                            this.tableData[i].children=res.data.data.records;
+                        }
+                    }
+                    let i=res.data.data.total%res.data.data.size;
+                    this.pagebean.totalpages=i;
+                    this.pagebean.total=res.data.data.total;
+                    this.pagebean.pages=res.data.data.current;
+                    this.itemKey = Math.random();
+                })
+            },
+            clickPage: function (pageno,userid) {
+                    axios.get("resorder/findByUid", {
+                        params: {
+                            userid: userid,
+                            pageno: pageno-1,
+                            pagesize: this.pagebean.pagesize,
+                            sortby: this.pagebean.sortby,
+                            sort: this.pagebean.sort,
+                        }
+                    }).then(res => {
+                        for (let i = 0; i <this.tableData.length; i++) {
+                            if (this.tableData[i].userid==res.data.data.records[0].userid){
+                                this.tableData[i].children=res.data.data.records;
+                            }
+                        }
+                        let i=res.data.data.total%res.data.data.size;
+                        this.pagebean.totalpages=i;
+                        this.pagebean.total=res.data.data.total;
+                        this.pagebean.pages=res.data.data.current;
+                        this.itemKey = Math.random();
+                    })
+
             },
             upStatus(i) {
                 axios.get("resuser/upStatus", {
@@ -115,10 +161,17 @@
                     this.tableData.forEach((i) => {
                         axios.get("resorder/findByUid", {
                             params: {
-                                userid: i.userid
+                                userid: i.userid,
+                                pageno: this.pagebean.pageno-1,
+                                pagesize: this.pagebean.pagesize,
+                                sortby: this.pagebean.sortby,
+                                sort: this.pagebean.sort,
                             }
                         }).then(res => {
-                            i.children = res.data.data;
+                            i.children = res.data.data.records;
+                            let m=res.data.data.total%res.data.data.size;
+                            this.pagebean.totalpages=m;
+                            this.pagebean.total=res.data.data.total;
                         })
                     })
                 })

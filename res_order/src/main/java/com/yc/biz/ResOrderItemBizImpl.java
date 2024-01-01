@@ -2,7 +2,7 @@ package com.yc.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.yc.bean.CartItem;
+import com.yc.bean.Resorderitem;
 import com.yc.dao.ResorderitemMapper;
 import com.yc.web.model.OrderItems;
 import lombok.extern.slf4j.Slf4j;
@@ -36,4 +36,5 @@ public class ResOrderItemBizImpl implements ResOrderItemBiz {
     public List<OrderItems> findItemByRoid(Integer roid) {
         return resorderitemMapper.findItemByRoid(roid);
     }
+
 }

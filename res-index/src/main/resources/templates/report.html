@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header(~{::title})">
+    <meta charset="UTF-8">
+    <title>报表统计</title>
+</head>
+<body>
+<div th:replace="layout/body::public"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="layout/body :: public1"></div>
+        <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">报表统计</h1>
+            <div style="display: flex; flex-direction: column; width: 90%; margin:auto; height: calc(100% - 50px)">
+                <el-menu class="el-menu-vertical-demo" v-if="flag">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <i></i>
+                            <span>菜品列表</span>
+                        </template>
+                        <el-menu-item-group title="未下架">
+                            <el-menu-item v-for="i,index in inSale" :key="index" @click.native="find(i,year)">
+                                {{i.fname}}
+                            </el-menu-item>
+                        </el-menu-item-group>
+                        <el-menu-item-group title="已下架">
+                            <el-menu-item v-for="i,index in outSale" :key="index" @click.native="find(i,year)">
+                                {{i.fname}}
+                            </el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+                <h4 style="flex: none;display: flex; align-items: center; justify-content: space-between">
+                    <form style="display: flex; align-items: center; font-weight: normal;left: 750px;position: relative;">
+                        <input type="radio" name="prize" checked @change="flag=true,money=true">菜品销量
+                        <input type="radio" name="prize" @change="flag=false,money=false" @click="findMoney(year)">销量金额
+                        <el-select v-model="year" style="width: 100px;margin-left: 20px">
+                            <el-option v-for="y,index in years" :value="y" :key="index" v-show="money==true"
+                                       @click.native="find(food,year)">{{y}}年
+                            </el-option>
+                            <el-option v-for="y in years" :value="y" v-show="money==false"
+                                       @click.native="findMoney(year)">{{y}}年
+                            </el-option>
+                        </el-select>
+                    </form>
+                </h4>
+                <div id="container" style="width: 600px;height:500px;left: 180px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/elementui.js"></script>
+<script src="/js/echarts.min.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            food: '',
+            money: true,
+            flag: true,
+            inSale: [],
+            outSale: [],
+            myChart: null,
+            prize: "",
+            years: [2023, 2013, 2014, 2015, 2016],
+            year: '2023',
+            option: {
+                title: {
+                    text: '素炒莴笋丝饼状图',
+                    subtext: '2012年',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left'
+                },
+                series: [
+                    {
+                        name: '素炒莴笋丝',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            // {value: 1048, name: '1月'},
+                            // {value: 735, name: '2月'},
+                            // {value: 580, name: '3月'},
+                            // {value: 484, name: '4月'},
+                            // {value: 300, name: '5月'}
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
+        },
+        computed: {
+            //计算属性
+        },
+        mounted() {
+            var dom = document.getElementById('container');
+            this.myChart = echarts.init(dom, null, {
+                renderer: 'canvas',
+                useDirtyRect: false
+            });
+            this.myChart.setOption(this.option);
+            window.addEventListener('resize', this.myChart.resize);
+        },
+        methods: {
+            findMoney(year) {
+                this.option.title.text ="销量金额饼状图";
+                this.option.title.subtext = year + "年";
+                this.option.series[0].name = "金额为：";
+                axios.get("resorder/findMoney", {
+                    params: {
+                        year: year
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    this.option.series[0].data = res.data;
+                    if (this.option && typeof this.option === 'object') {
+                        this.myChart.setOption(this.option);
+                    }
+                })
+            },
+            findYears() {
+                axios.get("resorder/findMonths").then(res => {
+                    this.years = res.data.data;
+                })
+            },
+            find(i, year) {
+                this.food = i;
+                if (this.food == '') {
+                    i = this.inSale[0];
+                }
+                this.option.title.text = i.fname + "饼状图";
+                this.option.title.subtext = year + "年";
+                this.option.series[0].name = i.fname;
+                axios.get("resorder/findOrder", {
+                    params: {
+                        fid: i.fid,
+                        year: year
+                    }
+                }).then(res => {
+                    this.option.series[0].data = res.data;
+                    if (this.option && typeof this.option === 'object') {
+                        this.myChart.setOption(this.option);
+                    }
+                })
+            },
+            findAllResFood() {//查询全部未下架的菜
+                axios.get("resfood/findAll").then(res => {
+                    this.inSale = res.data.data;
+                    this.find(this.inSale[0], this.year);
+                })
+            },
+            findAllResFood1() {//查询全部已经下架的菜
+                axios.get("resfood/findAll1").then(res => {
+                    this.outSale = res.data.data;
+                })
+            }
+        },
+        created: function () {
+            this.findAllResFood();
+            this.findAllResFood1();
+            this.findYears();
+        },
+
+    });
+</script>
+<style>
+    .el-submenu {
+        position: absolute;
+        width: 200px;
+        left: -74px;
+    }
+</style>
+</html>
