@@ -29,3 +29,10 @@ logging:
   file:
     #name: mylog.log
     path: logs/
+
+management:
+  endpoints:
+    web:  #以web端点
+      exposure:
+        include: "*"
+      base-path: /resindex/actuator

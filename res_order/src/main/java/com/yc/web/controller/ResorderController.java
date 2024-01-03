@@ -236,22 +236,36 @@ public class ResorderController {
     public List<Map<String ,Object>> findItemByFid(@RequestParam Integer fid,@RequestParam String year) {
         List<Map<String ,Object>> list = new ArrayList<>();
         list=resorderBiz.findOrder(fid,year);
+        List<Map<String ,Object>> list1 = new ArrayList<>();
+        Map<String ,Object>map=new HashMap<>();
+        map.put("name","");
+        map.put("type","line");
+        Map<String ,Object>map3=new HashMap<>();
+        map3.put("show",true);
+        map3.put("position","top");
+        map.put("label",map3);
+        Map<String ,Object>map0=new HashMap<>();
+        map.put("areaStyle",map0);
+        Map<String ,Object>map1=new HashMap<>();
+        map1.put("focus","series");
+        map.put("emphasis",map1);
+        int data[]={0,0,0,0,0,0,0,0,0,0,0,0};
         if (list.size()<=0){
-            Map<String ,Object>map=new HashMap<>();
-            map.put("code",0);
-            map.put("msg","查询失败");
-            list.add(map);
+            map.put("data",data);
+            list1.add(map);
         }else{
             for (int i = 0; i < list.size(); i++) {
-                Map<String ,Object>map=new HashMap<>();
                 String month= (String) list.get(i).get("name");
-                month=month+"月";
-                map.put("name",month);
-                map.put("value",list.get(i).get("value"));
-                list.set(i,map);
+                for (int j = 1; j <= data.length; j++) {
+                    if (month.equals("0"+j+"")||month.equals(j+"")){
+                        data[j-1]= (int) list.get(i).get("value");
+                    }
+                }
             }
+            map.put("data",data);
+            list1.add(map);
         }
-        return list;
+        return list1;
     }
 
     @RequestMapping(value = "findMonths", method = {RequestMethod.GET, RequestMethod.POST})

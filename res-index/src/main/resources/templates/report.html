@@ -12,32 +12,16 @@
         <div th:replace="layout/body :: public1"></div>
         <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">报表统计</h1>
-            <div style="display: flex; flex-direction: column; width: 90%; margin:auto; height: calc(100% - 50px)">
-                <el-menu class="el-menu-vertical-demo" v-if="flag">
-                    <el-submenu index="1">
-                        <template slot="title">
-                            <i></i>
-                            <span>菜品列表</span>
-                        </template>
-                        <el-menu-item-group title="未下架">
-                            <el-menu-item v-for="i,index in inSale" :key="index" @click.native="find(i,year)">
-                                {{i.fname}}
-                            </el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="已下架">
-                            <el-menu-item v-for="i,index in outSale" :key="index" @click.native="find(i,year)">
-                                {{i.fname}}
-                            </el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
+            <div style="display: flex; flex-direction: column; width: 90%; margin:auto; height: 600px">
                 <h4 style="flex: none;display: flex; align-items: center; justify-content: space-between">
                     <form style="display: flex; align-items: center; font-weight: normal;left: 750px;position: relative;">
-                        <input type="radio" name="prize" checked @change="flag=true,money=true">菜品销量
-                        <input type="radio" name="prize" @change="flag=false,money=false" @click="findMoney(year)">销量金额
+                        <input type="radio" name="prize" checked @change="flag=true,money=true,zz=false"
+                               @click="findline(year)">菜品销量
+                        <input type="radio" name="prize" @change="flag=false,money=false,zz=true"
+                               @click="findMoney(year)">销量金额
                         <el-select v-model="year" style="width: 100px;margin-left: 20px">
                             <el-option v-for="y,index in years" :value="y" :key="index" v-show="money==true"
-                                       @click.native="find(food,year)">{{y}}年
+                                       @click.native="findline(year)">{{y}}年
                             </el-option>
                             <el-option v-for="y in years" :value="y" v-show="money==false"
                                        @click.native="findMoney(year)">{{y}}年
@@ -45,7 +29,9 @@
                         </el-select>
                     </form>
                 </h4>
-                <div id="container" style="width: 600px;height:500px;left: 180px;"></div>
+                <div id="container0" style="width: 100%;height:100%;" v-show="money"></div>
+                <div id="container" style="width: 600px;height:500px;left: -110px;" v-show="zz"></div>
+                <div id="container1" style="width: 600px;height:500px;left: 440px;top: -496px;" v-show="zz"></div>
             </div>
         </div>
     </div>
@@ -62,6 +48,7 @@
         data: {
             food: '',
             money: true,
+            zz: false,
             flag: true,
             inSale: [],
             outSale: [],
@@ -69,6 +56,39 @@
             prize: "",
             years: [2023, 2013, 2014, 2015, 2016],
             year: '2023',
+            option0: {
+                title: {
+                    text: '菜品销量曲线图'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月', '10月', '11月', '12月']
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: []
+            },
             option: {
                 title: {
                     text: '素炒莴笋丝饼状图',
@@ -77,10 +97,6 @@
                 },
                 tooltip: {
                     trigger: 'item'
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left'
                 },
                 series: [
                     {
@@ -104,22 +120,124 @@
                     }
                 ]
             },
+            option1: {
+                title: {
+                    text: '销量金额柱状图',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '总金额',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: []
+                    }
+                ]
+            },
         },
         computed: {
             //计算属性
         },
+        created: function () {
+            this.findAllResFood();
+            this.findYears();
+        },
         mounted() {
+            var dom = document.getElementById('container0');
+            this.myChart0 = echarts.init(dom, null, {
+                renderer: 'canvas',
+                useDirtyRect: false
+            });//曲线图
+
             var dom = document.getElementById('container');
             this.myChart = echarts.init(dom, null, {
                 renderer: 'canvas',
                 useDirtyRect: false
-            });
-            this.myChart.setOption(this.option);
-            window.addEventListener('resize', this.myChart.resize);
+            });//饼图
+
+            var dom = document.getElementById('container1');
+            this.myChart1 = echarts.init(dom, null, {
+                renderer: 'canvas',
+                useDirtyRect: false
+            });//柱图
         },
         methods: {
-            findMoney(year) {
-                this.option.title.text ="销量金额饼状图";
+            findline(year) {
+                if (year == '') {
+                    year = this.year;
+                }
+                this.option0.series = [];
+                for (let i = 0; i < this.inSale.length; i++) {
+                    axios.get("resorder/findOrder", {
+                        params: {
+                            fid: this.inSale[i].fid,
+                            year: year
+                        }
+                    }).then(res => {
+                        res.data[0].name = this.inSale[i].fname;
+                        this.option0.series.push(res.data[0]);
+                    })
+                }
+                for (let i = 0; i < this.outSale.length; i++) {
+                    axios.get("resorder/findOrder", {
+                        params: {
+                            fid: this.outSale[i].fid,
+                            year: year
+                        }
+                    }).then(res => {
+                        res.data[0].name = this.outSale[i].fname;
+                        this.option0.series.push(res.data[0]);
+                    })
+                }
+                setTimeout(() => {
+                    this.myChart0.setOption(this.option0);
+                }, 500)
+            },
+            findYearsMoney() { //柱状图里面每年的金额
+                let data = 0;
+                this.years.forEach((item) => {
+                    axios.get("resorder/findMoney", {
+                        params: {
+                            year: item
+                        }
+                    }).then(res => {
+                        let money = 0;
+                        res.data.forEach((item) => {
+                            money += item.value;
+                        })
+                        data += money;
+                        this.option1.series[0].data.push(money);
+                    })
+                })
+            },
+            findMoney(year) {  //饼图每年每月的金额
+                this.option.title.text = "销量金额饼状图";
                 this.option.title.subtext = year + "年";
                 this.option.series[0].name = "金额为：";
                 axios.get("resorder/findMoney", {
@@ -127,42 +245,26 @@
                         year: year
                     }
                 }).then(res => {
-                    console.log(res.data)
                     this.option.series[0].data = res.data;
-                    if (this.option && typeof this.option === 'object') {
-                        this.myChart.setOption(this.option);
-                    }
+                    this.myChart.setOption(this.option);
                 })
+                this.myChart1.setOption(this.option1);
             },
-            findYears() {
+            findYears() { //查询全部年份
                 axios.get("resorder/findMonths").then(res => {
                     this.years = res.data.data;
-                })
-            },
-            find(i, year) {
-                this.food = i;
-                if (this.food == '') {
-                    i = this.inSale[0];
-                }
-                this.option.title.text = i.fname + "饼状图";
-                this.option.title.subtext = year + "年";
-                this.option.series[0].name = i.fname;
-                axios.get("resorder/findOrder", {
-                    params: {
-                        fid: i.fid,
-                        year: year
-                    }
-                }).then(res => {
-                    this.option.series[0].data = res.data;
-                    if (this.option && typeof this.option === 'object') {
-                        this.myChart.setOption(this.option);
-                    }
+                    this.option1.xAxis[0].data = res.data.data;//x轴 年
+                    this.findYearsMoney();
                 })
             },
             findAllResFood() {//查询全部未下架的菜
                 axios.get("resfood/findAll").then(res => {
                     this.inSale = res.data.data;
-                    this.find(this.inSale[0], this.year);
+                }).then(res=>{
+                    this.findAllResFood1();
+                    if (this.outSale!=null){
+                        this.findline(this.year);
+                    }
                 })
             },
             findAllResFood1() {//查询全部已经下架的菜
@@ -171,12 +273,6 @@
                 })
             }
         },
-        created: function () {
-            this.findAllResFood();
-            this.findAllResFood1();
-            this.findYears();
-        },
-
     });
 </script>
 <style>

@@ -26,7 +26,7 @@
                                     </el-form-item>
                                 </div>
                                 <div style="justify-content: center;display: flex;">
-                                    <a href="javascript:void" @click.prevent="clickPage(2,props.row.userid)" style="margin-right: 20px;">第一页</a>
+                                    <a href="javascript:void" @click.prevent="clickPage(1,props.row.userid)" style="margin-right: 20px;">第一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno-1,props.row.userid)" style="margin-right: 20px;">上一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno+1,props.row.userid)" style="margin-right: 20px;">下一页</a>
                                     <a href="javascript:void" @click.prevent="clickPage(pagebean.totalpages,props.row.userid)" style="margin-right: 20px;">最后一页</a>
@@ -69,7 +69,7 @@
         data: {
             tableData: [],
             pagebean: {
-                pageno: 2,
+                pageno: 1,
                 pagesize: 3,
                 sortby: "userid",
                 sort: "desc",
@@ -99,11 +99,11 @@
                 } else {
                     that.expands = []
                 }
-
+                this.pagebean.pageno=1;
                 axios.get("resorder/findByUid", {
                     params: {
                         userid: row.userid,
-                        pageno: this.pagebean.pageno-1,
+                        pageno: this.pagebean.pageno,
                         pagesize: this.pagebean.pagesize,
                         sortby: this.pagebean.sortby,
                         sort: this.pagebean.sort,
@@ -114,18 +114,19 @@
                             this.tableData[i].children=res.data.data.records;
                         }
                     }
-                    let i=res.data.data.total%res.data.data.size;
-                    this.pagebean.totalpages=i;
+                    this.pagebean.pageno=res.data.data.current;
+                    this.pagebean.totalpages=res.data.data.pages;
                     this.pagebean.total=res.data.data.total;
                     this.pagebean.pages=res.data.data.current;
                     this.itemKey = Math.random();
                 })
             },
             clickPage: function (pageno,userid) {
+                console.log(pageno+":"+userid)
                     axios.get("resorder/findByUid", {
                         params: {
                             userid: userid,
-                            pageno: pageno-1,
+                            pageno: pageno,
                             pagesize: this.pagebean.pagesize,
                             sortby: this.pagebean.sortby,
                             sort: this.pagebean.sort,
@@ -136,8 +137,8 @@
                                 this.tableData[i].children=res.data.data.records;
                             }
                         }
-                        let i=res.data.data.total%res.data.data.size;
-                        this.pagebean.totalpages=i;
+                        this.pagebean.pageno=res.data.data.current;
+                        this.pagebean.totalpages=res.data.data.pages;
                         this.pagebean.total=res.data.data.total;
                         this.pagebean.pages=res.data.data.current;
                         this.itemKey = Math.random();
@@ -162,7 +163,7 @@
                         axios.get("resorder/findByUid", {
                             params: {
                                 userid: i.userid,
-                                pageno: this.pagebean.pageno-1,
+                                pageno: this.pagebean.pageno,
                                 pagesize: this.pagebean.pagesize,
                                 sortby: this.pagebean.sortby,
                                 sort: this.pagebean.sort,

@@ -94,8 +94,8 @@ public class ResorderBizImpl implements ResorderBiz {
     }
 
     @Override
-    public List<Map<String, Object>> findOrder(Integer roid, String year) {
-        return resorderMapper.findOrder(roid, year);
+    public List<Map<String, Object>> findOrder(Integer fid, String year) {
+        return resorderMapper.findOrder(fid, year);
     }
 
     @Override
