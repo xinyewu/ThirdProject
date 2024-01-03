@@ -1,6 +1,7 @@
 package com.yc.web.controller;
 
 import com.yc.bean.Resadmin;
+import com.yc.bean.SystemHardwareInfo;
 import com.yc.biz.ResadminBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class ResadminController {
     private ResadminBiz resadminBiz;
 
     @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> login(String raname,String rapwd, HttpSession session) {
+    public Map<String, Object> login(String raname, String rapwd, HttpSession session) {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isEmpty(raname) || StringUtils.isEmpty(rapwd)) {
             map.put("code", -2);
@@ -47,6 +48,15 @@ public class ResadminController {
         //回送一个数据给客户端
         ru.setRapwd("");
         map.put("obj", ru);
+        return map;
+    }
+
+    @RequestMapping(value = "sys", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> sys() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        SystemHardwareInfo s = new SystemHardwareInfo();
+        s.copyTo();
+        map.put("data", s);
         return map;
     }
 }

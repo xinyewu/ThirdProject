@@ -3,6 +3,7 @@ package com.yc.web.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.yc.bean.Resfood;
+import com.yc.bean.SystemHardwareInfo;
 import com.yc.biz.ResfoodBizImpl;
 import com.yc.config.RedisKeys;
 import com.yc.web.model.MyPageBean;
@@ -80,6 +81,7 @@ public class ResfoodController {
         map.put("code", 1);
         return map;
     }
+
     @RequestMapping(value = "findAll1", method = {RequestMethod.GET, RequestMethod.POST})
     // @ApiOperation(value = "查询所有菜品")
     public Map<String, Object> findAl1l() {
@@ -138,9 +140,9 @@ public class ResfoodController {
         Map<String, Object> map = new HashMap<>();
         MyPageBean page = null;
 //        try {
-            sort = "desc";
-            sortby = "fid";
-            page = this.resfoodBiz.findByPage(pageno, pagesize, sortby, sort);
+        sort = "desc";
+        sortby = "fid";
+        page = this.resfoodBiz.findByPage(pageno, pagesize, sortby, sort);
 //        } catch (Exception e) {
 //            map.put("code", 0);
 //            map.put("msg", e.getCause());
@@ -157,10 +159,10 @@ public class ResfoodController {
     public Map<String, Object> addResfood(@RequestBody Resfood food) {
         Map<String, Object> map = new HashMap<>();
         System.out.println(food);
-        if (resfoodBiz.addResfood(food)>=1){
+        if (resfoodBiz.addResfood(food) >= 1) {
             map.put("code", 1);
             map.put("msg", "上传新菜成功");
-        }else {
+        } else {
             map.put("code", 0);
             map.put("msg", "上传新菜失败");
         }
@@ -170,10 +172,10 @@ public class ResfoodController {
     @RequestMapping(value = "deleteResfood", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> deleteResfood(@RequestParam Integer fid) {
         Map<String, Object> map = new HashMap<>();
-        if (resfoodBiz.deleteResfood(fid)>=1){
+        if (resfoodBiz.deleteResfood(fid) >= 1) {
             map.put("code", 1);
             map.put("msg", "下架菜品成功");
-        }else {
+        } else {
             map.put("code", 0);
             map.put("msg", "下架菜品失败");
         }
@@ -183,14 +185,22 @@ public class ResfoodController {
     @RequestMapping(value = "upfood", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> upResFood(@RequestBody Resfood resfood) {
         Map<String, Object> map = new HashMap<>();
-        if (resfoodBiz.upResFood(resfood)>=1){
+        if (resfoodBiz.upResFood(resfood) >= 1) {
             map.put("code", 1);
             map.put("msg", "修改菜品成功");
-        }else {
+        } else {
             map.put("code", 0);
-           map.put("msg", "修改菜品失败");
+            map.put("msg", "修改菜品失败");
         }
         return map;
     }
 
+    @RequestMapping(value = "sys", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> sys() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        SystemHardwareInfo s = new SystemHardwareInfo();
+        s.copyTo();
+        map.put("data", s);
+        return map;
+    }
 }

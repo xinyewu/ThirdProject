@@ -1,12 +1,9 @@
 package com.yc.web.controller;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.yc.bean.Resorderitem;
+import com.yc.bean.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yc.api.ResfoodApi;
-import com.yc.bean.Resfood;
-import com.yc.bean.Resorder;
-import com.yc.bean.Resuser;
 import com.yc.biz.GoodsBiz;
 import com.yc.biz.ResOrderItemBiz;
 import com.yc.biz.ResorderBiz;
@@ -303,4 +300,14 @@ public class ResorderController {
         }
         return list;
     }
+
+    @RequestMapping(value = "sys", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> sys() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        SystemHardwareInfo s = new SystemHardwareInfo();
+        s.copyTo();
+        map.put("data", s);
+        return map;
+    }
+
 }

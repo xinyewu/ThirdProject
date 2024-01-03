@@ -3,6 +3,7 @@ package com.yc.web.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.yc.bean.Resuser;
+import com.yc.bean.SystemHardwareInfo;
 import com.yc.biz.ResuserBizImpl;
 import com.yc.web.model.MyPageBean;
 import lombok.extern.slf4j.Slf4j;
@@ -118,5 +119,12 @@ public class ResuserController {
         }
         return map;
     }
-
+    @RequestMapping(value = "sys", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> sys() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        SystemHardwareInfo s = new SystemHardwareInfo();
+        s.copyTo();
+        map.put("data", s);
+        return map;
+    }
 }

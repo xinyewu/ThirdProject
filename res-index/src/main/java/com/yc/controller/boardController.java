@@ -33,8 +33,4 @@ public class boardController {
     public String gotoReport(){
         return "report";
     }
-    @GetMapping("/admin")
-    public String gotoAdmin(){
-        return "admin";
-    }
 }
