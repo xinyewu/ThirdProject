@@ -33,4 +33,16 @@ public class boardController {
     public String gotoReport(){
         return "report";
     }
+    @GetMapping("/userChat")
+    public String gotoUserChat(){
+        return "userChat";
+    }
+    @GetMapping("/ticketList")
+    public String gotoTicketList(){
+        return "ticketList";
+    }
+    @GetMapping("/test")
+    public String gotoTest(){
+        return "test";
+    }
 }

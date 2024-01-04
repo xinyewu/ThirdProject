@@ -16,6 +16,9 @@
         <module>res_gateway</module>
         <module>res-index</module>
         <module>res-user</module>
+        <module>res-ticket</module>
+        <module>res-chat</module>
+        <module>res-address_manage</module>
     </modules>
 
     <parent>

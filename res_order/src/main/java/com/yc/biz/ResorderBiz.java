@@ -33,4 +33,14 @@ public interface ResorderBiz {
 
     //查询该年每月的金额
     public List<Map<String, Object>> findMoney(String year);
+
+    //罗杰镕
+    public List<Map<String, Object>> findOldAll(Integer Pageno, Integer PageSize, String the_time, Integer userid);
+
+    public void delete_orderOldBy_roid(Integer roid);
+
+    public List<Map<String, Object>> findOldAll1(String the_time, Integer userid);
+
+    public Integer updataByRoidStar(Integer roid, Integer star);
+
 }

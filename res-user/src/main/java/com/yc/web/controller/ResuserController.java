@@ -98,6 +98,7 @@ public class ResuserController {
         }
         return map;
     }
+
     @RequestMapping(value = "findAll", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> findAll() {
         Map<String,Object>map=new HashMap<>();
@@ -119,6 +120,21 @@ public class ResuserController {
         }
         return map;
     }
+
+    @RequestMapping(value = "upStatus1", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> upStatus1(@RequestParam Integer userid,@RequestParam String username,@RequestParam String pwd) {
+        Map<String,Object>map=new HashMap<>();
+        int i= resuserBiz.upStatus1(userid,username,pwd);
+        if (i<=0){
+            map.put("code", 0);
+            map.put("msg","取消拉黑失败");
+        }else {
+            map.put("code", 1);
+            map.put("msg","取消拉黑成功");
+        }
+        return map;
+    }
+
     @RequestMapping(value = "sys", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> sys() throws Exception {
         Map<String, Object> map = new HashMap<>();
@@ -127,4 +143,71 @@ public class ResuserController {
         map.put("data", s);
         return map;
     }
+    //陈荣
+    @RequestMapping("selectUserAppraise")
+    public Map<String,Object> selectUserAppraise(@RequestParam String username){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("obj",resuserBiz.selectUserAppraise(username));
+        return map;
+    }
+
+    @RequestMapping("orderCount")
+    public Map<String,Object> orderCount(@RequestParam String username){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("obj",resuserBiz.orderCount(username));
+        return map;
+    }
+
+    @RequestMapping("firstOrderTime")
+    public Map<String,Object> firstOrderTime(@RequestParam String username){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("obj",resuserBiz.firstOrderTime(username));
+        return map;
+    }
+
+    @RequestMapping("lastOnlineTime")
+    public Map<String,Object> lastOnlineTime(@RequestParam String username){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("obj",resuserBiz.lastOnlineTime(username));
+        return map;
+    }
+
+    @RequestMapping("updateLastOnline")
+    public Map<String,Object> updateLastOnline(@RequestParam Integer userid){
+        Map<String,Object> map = new HashMap<>();
+        if (resuserBiz.updateLastOnline(userid)){
+            map.put("code",1);
+            return map;
+        }
+        map.put("code",0);
+        return map;
+    }
+    @RequestMapping(value = "findByName",method = {RequestMethod.GET,RequestMethod.POST})
+    public Map<String,Object> findByName(@RequestParam String username, @RequestParam String password, HttpSession session){
+        Map<String,Object> map = new HashMap<>();
+        Resuser resuser = null;
+        try{
+            resuser = resuserBiz.findByName(username,password);
+            if (resuser == null){
+                map.put("code",0);
+                map.put("msg","用户名或密码错误！");
+                return map;
+            }
+        }catch (RuntimeException e){
+            map.put("msg",e.getCause());
+            map.put("code",0);
+            e.printStackTrace();
+            return map;
+        }
+        session.setAttribute("resuser",resuser);
+        map.put("data",resuser);
+        map.put("code",1);
+        return map;
+
+    }
+
 }

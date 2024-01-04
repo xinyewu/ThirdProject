@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)//因为这个业务类中所有的方法都有find，所有事物配置为readOnly
@@ -51,6 +52,7 @@ public class ResuserBizImpl implements ResuserBiz{
         wrapper.orderByAsc("userid");
         return resuserMapper.selectList(wrapper);
     }
+
     @Transactional(readOnly = false)
     @Override
     public int upStatus(Integer userid, String username, String pwd) {
@@ -61,6 +63,48 @@ public class ResuserBizImpl implements ResuserBiz{
         Resuser resuser=new Resuser();
         resuser.setStatus("1"); //0 正常  1 拉黑
         return resuserMapper.update(resuser,wrapper);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public int upStatus1(Integer userid, String username, String pwd) {
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("userid",userid);
+        wrapper.eq("username",username);
+        wrapper.eq("pwd",pwd);
+        Resuser resuser=new Resuser();
+        resuser.setStatus("0"); //0 正常  1 拉黑
+        return resuserMapper.update(resuser,wrapper);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Boolean updateLastOnline(Integer userid) {
+        return resuserMapper.updateLastOnline(userid);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public String lastOnlineTime(String username) {
+        return resuserMapper.lastOnlineTime(username);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Integer orderCount(String username) {
+        return resuserMapper.orderCount(username);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public String firstOrderTime(String username) {
+        return resuserMapper.firstOrderTime(username);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Map<String,Integer> selectUserAppraise(String username) {
+        return resuserMapper.selectUserAppraise(username);
     }
 
 }

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="layout/header :: header(~{::title})">
+    <meta charset="UTF-8">
+    <title>报表统计</title>
+</head>
+<body>
+<div th:replace="layout/body::public"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="layout/body :: public1"></div>
+        <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <!--      聊天框-->
+                <!-- entry -->
+                <div class="users">
+
+                    <div v-for="(user,index) in users" class="user" @click="selectUser(user,index)">
+                        <i class="el-icon-s-custom"></i>
+                        {{user}}
+                    </div>
+                </div>
+                <div class="chat_commento" style="position: fixed;top: 60px;left: 600px">
+                    <!-- top -->
+                    <div class="chat_top">
+                        {{ message.toUser == '' ? '请选择用户进行聊天':message.toUser }}
+                    </div>
+                    <!-- line -->
+                    <div class="line"></div>
+                    <!-- middle -->
+                    <div class="chat_middle" id="chat_middle_item"></div>
+                    <!-- line -->
+                    <div class="line"></div>
+                    <!-- foot -->
+                    <div class="chat_foot">
+                        <!-- context -->
+                        <!--              textarea  多行文本标签-->
+                        <textarea class="chat_context" id="chat_context_item" cols="30" rows="10" placeholder="请输入"
+                                  v-model="message.content"></textarea>
+                        <div class="chat_commit" id="button" @click="sendMessage">发送</div>
+                    </div>
+                </div>
+                <div class="userInfo" v-show="showUserInfoFlag">
+                    <h2>关于{{ message.toUser }}</h2>
+                    <div id="firstOrderTime"></div>
+                    <div id="orderCount"></div>
+                    <div id="lastOnlineTime"></div>
+                    <div id="good"></div>
+                    <div id="middle"></div>
+                    <div id="no"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/elementui.js"></script>
+<script src="/js/echarts.min.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            users: [
+                'hh',
+                '安检设备的空降兵',
+                '的发射点',
+                'fgfdhgf'
+            ],// 聊天列表中的所有用户
+            message: {
+                content: '',
+                toUser: '',
+                fromUser: '小萌神客服',
+                date: '',
+                readed: ''
+            },
+            user: '',
+            history: '', // 聊天记录
+            showUserInfoFlag: false,
+        },
+        methods: {
+            selectUser(user, index) {
+                var _this = this;
+                if (user != this.message.toUser) {
+                    this.showUserInfoFlag = true;
+                    document.getElementById('chat_middle_item').innerHTML = '';
+                    this.history = [];
+                    _this.message.toUser = user;
+
+                    // 使用 Promise.all() 可以将多个请求合并为一个 Promise 对象，并在所有请求都成功返回后再进行数据更新
+                    // responses 是一个promise对象的数组
+                    document.getElementById('orderCount').innerText = '';
+                    document.getElementById('firstOrderTime').innerText = '';
+                    document.getElementById('lastOnlineTime').innerText = '';
+                    document.getElementById('good').innerText = '';
+                    document.getElementById('middle').innerText = '';
+                    document.getElementById('no').innerText = '';
+                    Promise.all([
+                        axios.get("/resuser/orderCount?username=" + user),
+                        axios.get("/resuser/firstOrderTime?username=" + user),
+                        axios.get("/resuser/lastOnlineTime?username=" + user),
+                        axios.get("/resuser/selectUserAppraise?username=" + user)
+                    ]).then(responses => {
+                        const orderCount = responses[0].data.obj;
+                        const firstOrderTime = responses[1].data.obj == null ? '无' : responses[1].data.obj;
+                        const lastOnlineTime = responses[2].data.obj == null ? '无' : responses[2].data.obj;
+                        // 更新容器元素对象的 innerText 属性
+                        document.getElementById('orderCount').innerText = `消费次数：${orderCount}`;
+                        document.getElementById('firstOrderTime').innerText = `首次消费时间：${firstOrderTime}`;
+                        document.getElementById('lastOnlineTime').innerText = `最近在线时间：${lastOnlineTime}`;
+                        if (responses[3].data.code == 1 && responses[3].data.obj != null) {
+                            const good = responses[3].data.obj.好评;
+                            const middle = responses[3].data.obj.中评;
+                            const no = responses[3].data.obj.差评;
+                            document.getElementById('good').innerText = `好评 ${good} 次`;
+                            document.getElementById('middle').innerText = `一般 ${middle} 次`;
+                            document.getElementById('no').innerText = `差评 ${no} 次`;
+                        }
+
+                    }).catch(error => {
+                        console.error(error);
+                    });
+
+                    // 将消息转成已读
+                    this.handleUnreadMessage();
+                    // 获取和他之间的历史信息
+                    axios.get("/reschat/selectRecord?toUser=" + user + "&fromUser=小萌神客服").then(res => {
+                        this.history = res.data.obj;
+                        console.log(this.history);
+                        // this.$forceUpdate()
+                        this.history.forEach((value, index) => {
+                            // 创建一个消息容器元素
+                            const messageContainer = document.createElement('div');
+
+                            // 根据消息发送人的类型添加不同的 class
+                            const className = value.fromuser !== "小萌神客服" ? "chat_left" : "chat_right";
+                            messageContainer.className = className;
+
+                            // 创建消息内容 HTML 结构
+                            messageContainer.innerHTML = `
+                            <div class="${className}_item_1">${value.fromuser.toString().substring(0, 3)}</div>
+                            <div class="${className}_item_2">
+                            <div class="${className}_time">${value.time}</div>
+                              <div class="${className}_content">
+                                ${value.content}
+                              </div>
+                            </div>
+                          `;
+
+                            // 将消息容器添加到聊天界面中
+                            const chatBox = document.getElementById('chat_middle_item');
+                            chatBox.appendChild(messageContainer);
+                            //定位到最后一条消息的位置(无滚动效果)    behavior: "smooth" 滚动到最后一条消息的位置
+                            const lastMessage = chatBox.lastElementChild;
+                            if (lastMessage) {
+                                lastMessage.scrollIntoView({behavior: "auto", block: "end"});
+                            }
+                        })
+                    })
+                }
+
+            },
+            getCurrentTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                return hours + ':' + minutes;
+            },
+            handleReceivedMessage(message) {
+                const fromUser = message.fromUser;
+                const content = message.content;
+                // 创建一个消息容器元素
+                const messageContainer = document.createElement('div');
+
+                // 根据消息发送人的类型添加不同的 class
+                const className = message.fromUser !== "小萌神客服" ? "chat_left" : "chat_right";
+                messageContainer.className = className;
+
+                // 创建消息内容 HTML 结构
+                messageContainer.innerHTML = `
+                    <div class="${className}_item_1">${fromUser}</div>
+                    <div class="${className}_item_2">
+                      <div class="${className}_content">
+                        ${content}
+                      </div>
+                    </div>
+                  `;
+
+                // 将消息容器添加到聊天界面中
+                const chatBox = document.getElementById('chat_middle_item');
+                chatBox.appendChild(messageContainer);
+            },
+            init() {
+                var _this = this;
+                this.user = new WebSocket("ws://localhost:2000/websocket/" + '小萌神客服');
+                this.user.onopen = function () {
+                    console.log("服务端连接已建立！");
+                };
+                this.user.onclose = function () {
+                    console.log("服务端连接已断开！");
+                };
+                this.user.onmessage = function (msg) {
+                    const message = JSON.parse(msg.data);
+                    console.log(message);
+                    const fromUser = message.fromUser;
+                    const content = message.content;
+                    const date = message.date;
+                    const toUser = message.toUser;
+                    const readed = message.readed;
+                    axios.get("/reschat/addChatRecord?content=" + content + "&fromuser=" + fromUser + "&touser=" +
+                        toUser + "&type=" + "text" + "&readed=" + readed).then();
+                    axios.get("/reschat/selectUsers").then(res => {
+                        this.users = res.data.obj;
+                    })
+                    console.log(_this.message.toUser);
+                    if (_this.message.toUser != '') {
+                        // 创建一个消息容器元素
+                        const messageContainer = document.createElement('div');
+
+                        // 根据消息发送人的类型添加不同的 class
+                        const className = message.fromUser !== "小萌神客服" ? "chat_left" : "chat_right";
+                        messageContainer.className = className;
+
+                        // 创建消息内容 HTML 结构
+                        messageContainer.innerHTML = `
+                    <div class="${className}_item_1">${fromUser.toString().substring(0, 3)}</div>
+                    <div class="${className}_item_2">
+                    <div class="${className}_time">${date}</div>
+                      <div class="${className}_content">
+                        ${content}
+                      </div>
+                    </div>
+                  `;
+                        // 将消息容器添加到聊天界面中
+                        const chatBox = document.getElementById('chat_middle_item');
+                        chatBox.appendChild(messageContainer);
+                        const lastMessage = chatBox.lastElementChild;
+                        if (lastMessage) {
+                            lastMessage.scrollIntoView({behavior: "auto", block: "end"});
+                        }
+                    }
+
+                };
+            },
+            sendMessage() {
+                if (this.message.content != '' && this.message.toUser != '') {
+                    // 点击某位联系人，获取他的标识，如果跟他是初次聊天则创建一个容器来存储只属于这两个人的聊天记录
+                    this.message.fromUser = '小萌神客服'; // 发送端
+                    // this.message.toUser = 'zs';
+                    this.message.date = this.dateFormat(new Date());
+                    // 将新消息插入到聊天记录中
+                    this.user.send(JSON.stringify(this.message));
+                    this.message.content = '';
+                }
+            },
+            dateFormat(date) {
+                const dateObject = new Date(date);
+                const year = dateObject.getFullYear();
+                const month = dateObject.getMonth() + 1;
+                const day = dateObject.getDate();
+                const hours = dateObject.getHours();
+                const minutes = dateObject.getMinutes();
+                const seconds = dateObject.getSeconds();
+                const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                return formattedDateTime;
+            },
+            selectUsers() { // 获取聊过（有消息记录）的用户
+                return axios.get("/reschat/selectUsers");
+            },
+            handleUnreadMessage() { // 将消息标记为已读
+                axios.get("/reschat/handleUnreadMessage?toUser=" + this.message.fromUser + "&fromUser=" + this.message.toUser).then();
+            },
+            selectAll() {
+                return axios.get("/reschat/selectAll");
+            }
+        },
+        mounted() {
+            this.init();
+            // 获取与客服聊过天的用户名
+            this.selectUsers().then(res => {
+                this.users = res.data.obj;
+                // TODO 获取来自每个用户的未读消息数  fromUser=用户  toUser=小萌神客服
+                this.users.forEach((value, index) => {
+                    axios.get("/reschat/getUnreadCount?fromUser=" + value + "&toUser=小萌神客服").then(res => {
+                        this.users[index].unreadCount = res.data.obj;
+                        // // 在用户列表中显示消息记录中最后一条记录
+                        // this.users[index].lastMessage = '';
+                        // // 用户的下单次数
+                        // this.users[index].orderCount = '';
+                        // // 用户第一次消费的时间
+                        // this.users[index].firstOrderTime = '';
+                        // // 最后一次上线的时间
+                        // this.users[index].lastOnlineTime = '';
+                    })
+                })
+            })
+        },
+        created() {
+
+        },
+
+        // computed 中的属性发生变化会触发页面的重新渲染
+        computed: {
+            // 过滤出与当前选中联系人相关的聊天记录
+            // filteredHistory: function () {
+            //     return this.history.filter(item => item.fromUser === this.message.toUser&&item.toUser === this.message.fromUser
+            //         || item.toUser === this.message.toUser&&item.fromUser === this.message.fromUser);
+            // },
+        },
+    })
+</script>
+</body>
+<style>
+    .demo-drawer__footer {
+        margin-left: 200px !important;
+    }
+
+    .chat_commento {
+        width: 450px;
+        height: 650px;
+        margin: auto;
+        /*border-top-right-radius: 10px;*/
+        /*border-bottom-right-radius: 10px;*/
+        /*border-radius: 10px;*/
+        border: 2px solid #f4f5f7;
+    }
+
+    .clearfix::after {
+        content: "";
+        display: block;
+        clear: both;
+        width: 0;
+        height: 0;
+        line-height: 0;
+        visibility: hidden;
+    }
+
+    /* top */
+    .chat_top {
+        width: 100%;
+        height: 50px;
+        /*border-top-left-radius: 10px;*/
+        /*border-top-right-radius: 10px;*/
+        padding-left: 20px;
+        font-size: 20px;
+        line-height: 50px;
+        box-sizing: border-box;
+        font-weight: 550;
+        border-width: 0px;
+    }
+
+    /* middle */
+    /* 左边 */
+    .chat_middle {
+        width: 450px;
+        height: 455px;
+        position: relative;
+        box-sizing: border-box;
+        overflow: auto;
+        border-width: 0px;
+    }
+
+    .chat_left {
+        width: 100%;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .chat_left_item_1 {
+        width: 50px;
+        height: 50px;
+        background-color: #4459AB;
+        float: left;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        border-radius: 25px;
+    }
+
+    .chat_left_item_2 {
+        width: 55%;
+        height: 100px;
+        float: left;
+        margin-top: 10px;
+    }
+
+    .chat_left_item_2 .chat_left_chat {
+        float: left;
+    }
+
+    .chat_left_item_2 .chat_left_content {
+        padding: 15px;
+        margin-top: 10px;
+        background-color: #f4f5f7;
+        display: inline-block;
+        border-radius: 10px;
+        border-top-left-radius: 0px;
+    }
+
+    /* 右边 */
+    .chat_right {
+        width: 100%;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .chat_right_item_1 {
+        width: 50px;
+        height: 50px;
+        background-color: #4459AB;
+        float: right;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        border-radius: 25px;
+    }
+
+    .chat_right_item_2 {
+        width: 55%;
+        height: 100px;
+        float: right;
+        margin-top: 10px;
+    }
+
+    .chat_left_time {
+        width: 100%;
+        text-align: left;
+    }
+
+    .chat_right_time {
+        width: 100%;
+        text-align: right;
+    }
+
+    .chat_right_content {
+        float: right;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        border-top-right-radius: 0px;
+        background-color: #4F7cff;
+        color: white;
+    }
+
+    /* foot */
+    .chat_foot {
+        width: 450px;
+        height: 130px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        position: relative;
+    }
+
+    .chat_context {
+        width: 100%;
+        height: 100%;
+        font-size: 17px;
+        box-sizing: border-box;
+        outline: none;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-width: 0px;
+        padding: 16px;
+    }
+
+    .chat_commit {
+        width: 80px;
+        height: 30px;
+        color: white;
+        background-color: #4F7cff;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 5px;
+        position: absolute;
+        right: 10px;
+        bottom: 20px;
+        margin-right: 10px;
+    }
+
+    .chat_context {
+        resize: none;
+    }
+
+    .chat_context::placeholder {
+        color: black;
+        font-weight: 500 k;
+    }
+
+    .line {
+        width: 100%;
+        border-top: 1px;
+        border-color: #f4f5f7;
+        border-style: solid;
+    }
+
+
+    .sidebar {
+        width: 300px;
+        height: 100%;
+        background-color: #f4f5f7;
+        float: left;
+        border-right: 2px solid #f4f5f7;
+    }
+
+    .user_list {
+        padding: 20px;
+    }
+
+    .user_item {
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .user_item:hover {
+        background-color: #cfd8dc;
+    }
+
+
+    .user {
+        line-height: 50px;
+        border: 1px solid #e1f3d8;
+        width: 200px;
+    }
+
+    .user:first-child {
+        border-top-left-radius: 10px;
+    }
+
+    .user:last-child {
+        border-bottom-left-radius: 10px;
+    }
+
+    .user:hover {
+        background-color: #e1f3d8;
+    }
+
+    .users {
+        border: 1px solid #e1f3d8;
+        position: fixed;
+        top: 60px;
+        left: 400px;
+        height: 650px;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .users * {
+        padding-left: 20px;
+    }
+
+    .userInfo {
+        height: 650px;
+        border: 1px solid #e1f3d8;
+        position: fixed;
+        top: 60px;
+        right: 136px;
+        width: 300px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .userInfo h2 {
+        text-align: center;
+    }
+
+    .userInfo div {
+        padding-left: 20px;
+        line-height: 50px;
+        font-weight: 1.1;
+    }
+</style>
+</html>

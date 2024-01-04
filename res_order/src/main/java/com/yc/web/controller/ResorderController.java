@@ -145,7 +145,13 @@ public class ResorderController {
     }
 
     @RequestMapping(value = "confirmOrder", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> confirmOrder(Resorder order, HttpSession session) {
+    public Map<String, Object> confirmOrder(@RequestParam String address,@RequestParam String username,@RequestParam String detailed_address,@RequestParam String tel,@RequestParam String deliverytime1,@RequestParam String ps, HttpSession session) {
+        Resorder order = new Resorder();
+        order.setAddress(address);
+        order.setUsername(username);
+        order.setDetailed_address(detailed_address);
+        order.setPs(ps);
+        order.setTel(tel);
         Map<String, Object> map = new HashMap<>();
         if (session.getAttribute("cart") == null || ((Map<Integer, CartItem>) session.getAttribute("cart")).size() <= 0) {
             map.put("code", -1);
@@ -164,8 +170,9 @@ public class ResorderController {
         LocalDateTime now = LocalDateTime.now();
         order.setOrdertime(formatter.format(now));
         if (order.getDeliverytime() == null || "".equals(order.getDeliverytime())) {
+
             LocalDateTime deliverytime = now.plusHours(1);
-            order.setOrdertime(formatter.format(deliverytime));
+            order.setDeliverytime(formatter.format(deliverytime));
         }
         order.setStatus(0);
         try {
@@ -310,4 +317,53 @@ public class ResorderController {
         return map;
     }
 
+    @RequestMapping("findOldAll")
+    public Map<String,Object>findOldAll(@RequestParam Integer PageNo,@RequestParam Integer PageSize,@RequestParam String the_time ,HttpSession session){
+        Map<String, Object> map = new HashMap<>();
+
+        if (session.getAttribute("resuser") == null) {
+            map.put("code", -2);
+            map.put("msg", "非登录用户不能下单");
+            return map;
+        }
+        Resuser resuser = (Resuser) session.getAttribute("resuser");
+        Integer userid = resuser.getUserid();
+        System.out.println(PageNo+"pageno:"+PageSize+"pagesize");
+        Integer Pageno = PageNo*PageSize-PageSize;
+        List<Map<String,Object>>list = new ArrayList<>();
+
+        List<Map<String,Object>>list1 = resorderBiz.findOldAll1(the_time,userid);
+        System.out.println();
+        if(!resorderBiz.findOldAll(Pageno,PageSize,the_time,userid).isEmpty()) {
+            list = resorderBiz.findOldAll(Pageno, PageSize,the_time,userid);
+            System.out.println(list.size());
+            map.put("data", list);
+            map.put("code",1);
+            map.put("ru",resuser);
+            map.put("total",list1.size());
+        }else {
+            map.put("code",0);
+        }
+        return map;
+    }
+    @RequestMapping("deleteOldByRoid")
+    public void deleteOldByRoid(@RequestParam Integer roid){
+        resorderBiz.delete_orderOldBy_roid(roid);
+    }
+    @RequestMapping("updataStarByRoid")
+    public Map<String,Object> updataStarByRoid(@RequestParam Integer roid,@RequestParam Integer star,HttpSession session){
+        Map<String,Object>map = new HashMap<>();
+        if (session.getAttribute("star_roid")!=null){
+            if(Integer.parseInt(session.getAttribute("star_roid").toString())==roid){
+                map.put("code",2);
+                map.put("msg","该订单已评价");
+            }
+        }else{
+            if (resorderBiz.updataByRoidStar(roid,star)!=0){
+                map.put("code",1);
+                session.setAttribute("star_roid",roid);
+            }
+        }
+        return map;
+    }
 }

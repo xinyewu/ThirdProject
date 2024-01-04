@@ -8,15 +8,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="test_responsibilityChainPattern" />
-        <module name="res-user" />
         <module name="res-index" />
+        <module name="res-chat" />
         <module name="res_order" />
+        <module name="res-ticket" />
         <module name="res-admin-server" />
-        <module name="res_api" />
         <module name="res_entity" />
-        <module name="res_gateway" />
         <module name="test_builderDesignPattern_fluentAPI" />
         <module name="test_sentinel3" />
+        <module name="res-user" />
+        <module name="res_api" />
+        <module name="res_gateway" />
+        <module name="res-address_manage" />
         <module name="res_food" />
       </profile>
     </annotationProcessing>
@@ -27,8 +30,11 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="res-address_manage" options="-parameters" />
       <module name="res-admin-server" options="-parameters" />
+      <module name="res-chat" options="-parameters" />
       <module name="res-index" options="-parameters" />
+      <module name="res-ticket" options="-parameters" />
       <module name="res-user" options="-parameters" />
       <module name="res_api" options="-parameters" />
       <module name="res_entity" options="-parameters" />

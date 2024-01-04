@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="layout/header :: header(~{::title})">
+    <meta charset="UTF-8">
+    <title>优惠券管理</title>
+</head>
+<body>
+<div th:replace="layout/body::public"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="layout/body :: public1"></div>
+        <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">优惠券管理</h1>
+            <template>
+                <el-table :data="this.allTicket" style="width: 100%">
+                    <el-table-column prop="starttime" label="日期" width="150"></el-table-column>
+                    <el-table-column label="优惠券信息">
+                        <el-table-column prop="tno" label="编号" width="120"></el-table-column>
+                        <el-table-column prop="money" label="总金额" width="120"></el-table-column>
+                        <el-table-column prop="ticketCount" label="数量" width="120"></el-table-column>
+                        <el-table-column prop="remainmoney" label="剩余金额" width="120"></el-table-column>
+                        <el-table-column prop="remainticket" label="剩余数量" width="120"></el-table-column>
+                        <el-table-column label="使用情况">
+                            <el-table-column prop="useMoney" label="使用金额" width="120"></el-table-column>
+                            <el-table-column prop="useCount" label="使用数量" width="120"></el-table-column>
+                        </el-table-column>
+                        <el-table-column prop="state" label="状态" width="120">
+                            <template slot-scope="scope">
+                                <el-button type="success" plain disabled v-show="scope.row.state == 1">进行中</el-button>
+                                <el-button type="danger" plain disabled v-show="scope.row.state != 1">已结束</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table-column>
+                </el-table>
+            </template>
+            <el-button type="primary" @click.native="dialog = true">发布优惠券</el-button>
+
+            <el-drawer title="发布优惠券 " :before-close="handleClose" :visible.sync="dialog" direction="ltr" custom-class="demo-drawer" ref="drawer" style="width: 111%;">
+
+            <div class="demo-drawer__content">
+                    <el-form :model="ticket">
+                        <el-form-item label="总金额" :label-width="formLabelWidth">
+                            <el-input v-model="ticket.sendMoney" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="数量" :label-width="formLabelWidth">
+                            <el-input v-model="ticket.sendTicketCount" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="类型" :label-width="formLabelWidth">
+                            <el-select v-model="ticket.type" placeholder="请选择优惠券类型">
+                                <el-option label="满减券" value="满减券"></el-option>
+                                <el-option label="无门槛券" value="无门槛券"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="条件金额" :label-width="formLabelWidth" v-show="ticket.type=='满减券'">
+                            <el-input v-model="ticket.conditionMoney" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="活动时间" :label-width="formLabelWidth">
+                            <template>
+                                <div class="block">
+                                    <el-date-picker v-model="rangeTime" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                                    </el-date-picker>
+                                </div>
+                            </template>
+                        </el-form-item>
+                    </el-form>
+                    <div class="demo-drawer__footer">
+                        <el-button @click="cancelForm">取 消</el-button>
+                        <el-button type="primary" @click="$refs.drawer.closeDrawer()" :loading="loading">{{ loading ?
+                            '发布中 ...' : '确 定' }}
+                        </el-button>
+                    </div>
+                </div>
+            </el-drawer>
+        </div>
+    </div>
+</div>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/elementui.js"></script>
+<script src="/js/echarts.min.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            allTicket: [{
+                endtime: '',
+                fullmoney: '',
+                money: '',
+                remainmoney: '',
+                remainticket: '',
+                starttime: '',
+                state: '',
+                ticketCount: '',
+                tno: '',
+                type: '',
+                useCount: '',
+                useMoney: ''
+            }],
+            ticket: {
+                sendMoney: '',
+                sendTicketCount: '',
+                type: '',
+                conditionMoney: '',
+                startTime: '',
+                endTime: ''
+            },
+            rangeTime: [],
+
+            table: false,
+            dialog: false,
+            loading: false,
+            formLabelWidth: '80px',
+            timer: null,
+        },
+        methods: {
+            notNull(array) {
+                let flag = true;
+                for (let i = 0; i < array.length; i++) {
+                    flag &= (array[i] != '' || array[i] != null);
+                }
+                return flag;
+            },
+            dateFormat(date) {
+                const dateObject = new Date(date);
+                const year = dateObject.getFullYear();
+                const month = dateObject.getMonth() + 1;
+                const day = dateObject.getDate();
+                const hours = dateObject.getHours();
+                const minutes = dateObject.getMinutes();
+                const seconds = dateObject.getSeconds();
+                const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                return formattedDateTime;
+            },
+            handleClose(done) {
+                if (this.loading) {
+                    return;
+                }
+                this.$confirm('确认发布？')
+                    .then(_ => {
+                        this.loading = true;
+                        this.submitTicket();
+                        this.timer = setTimeout(() => {
+                            done();
+                            // 动画关闭需要一定的时间
+                            setTimeout(() => {
+                                this.loading = false;
+                            }, 400);
+                        }, 2000);
+                    })
+                    .catch(_ => {
+                    });
+            },
+            cancelForm() {
+                this.loading = false;
+                this.dialog = false;
+                clearTimeout(this.timer);
+            },
+            submitTicket() {
+                axios.get("/resticket/selectTicket").then(res => {
+                    if (res.data.code == 0) {
+                        let value = this.ticket;
+                        value.startTime = this.dateFormat(this.rangeTime[0]);
+                        value.endTime = this.dateFormat(this.rangeTime[1]);
+                        if (this.notNull([value.sendMoney, value.sendTicketCount, value.type, value.startTime, value.endTime])) {
+                            if (value.sendMoney < value.sendTicketCount * 0.01) {
+                                alert("金额过低或券数量过多,请检查后重试!");
+                                return;
+                            }
+                            if (value.conditionMoney == 0 || value.conditionMoney == '') { // 如果勾选了满减券,但是条件金额为0或'',改为无门槛券
+                                value.conditionMoney = 0;
+                                value.type = '无门槛券';
+                            }
+                            var params = new URLSearchParams();
+                            axios.get("/resticket/addTicket?fullmoney=" + value.conditionMoney + "&money=" + value.sendMoney
+                                + "&ticketcount=" + value.sendTicketCount + "&type=" + value.type + "&starttime=" + value.startTime
+                                + "&endtime=" + value.endTime).then(res => {
+                                this.$message({
+                                    type: res.data.code == 1 ? 'success' : 'error',
+                                    message: res.data.msg
+                                })
+                                window.location.reload();
+                            })
+                        } else {
+                            alert("信息填写不完整!")
+                        }
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '当前已经有正在进行中的抢券活动'
+                        })
+                    }
+                })
+            },
+            findAll() {
+                axios.get("/resticket/findAll").then(res => {
+                    this.allTicket = res.data.obj;
+                    this.allTicket.forEach((value, index) => {
+                        axios.get("/resticket/useCountMoney?tno=" + value.tno).then(result => {
+                            this.allTicket[index].remainmoney = this.allTicket[index].remainmoney.toFixed(2);
+                            this.allTicket[index].useCount = result.data.useCount == null ? 0 : result.data.useCount;
+                            this.allTicket[index].useMoney = result.data.useMoney == null ? 0 : result.data.useMoney;
+                        })
+                    })
+                })
+            }
+        },
+        mounted() {
+            axios.get("/resticket/selectTicket").then(res => {
+                if (res.data.code == 1) {
+                    const dateObj = new Date(res.data.obj.endtime);
+                    if (dateObj < new Date()) {
+                        axios.get("/resticket/over?tno=" + res.data.obj.tno).then(() => {
+                            this.findAll();
+                            return;
+                        })
+                        console.log("优惠券活动过期啦");
+                    } else {
+                        console.log("活动还在继续");
+                    }
+                }
+                this.findAll()
+            })
+        },
+        created() {
+        }
+    })
+</script>
+</body>
+<style>
+    .demo-drawer__footer {
+        margin-left: 200px !important;
+    }
+</style>
+</html>

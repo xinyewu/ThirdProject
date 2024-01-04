@@ -8,32 +8,305 @@
     <!-- 图标 -->
     <link rel="short icon" href="image/eat0.ico"/>
     <link rel="stylesheet" href="css/index.css"/>
-<!--    1.采用CDN（内容分发网络）-->
-<!--    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">-->
-<!--    2.采用下载样式-->
+    <!--    1.采用CDN（内容分发网络）-->
+    <!--    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <!--    2.采用下载样式-->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css" rel="stylesheet">
 </head>
+<style>
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .popup-content {
+        background-color: #fff;
+        width: 420px;
+        padding: 13px;
+        height: 270px;
+        margin: 100px auto;
+        border-radius: 10px;
+    }
+
+    .close {
+        float: right;
+        cursor: pointer;
+    }
+
+    #showsession {
+        display: none;
+        height: 105px;
+        width: 210px;
+        position: absolute;
+        left: 110px;
+        border: 0.1px solid rgb(175, 175, 175);
+        box-shadow: 2px 2px 4px rgb(0 0 0 / 40%);
+        z-index: 1;
+        background-color: rgb(249, 249, 249);
+        top: 40px;
+        /*opacity: 0;*/
+        /*transition: opacity 1s, transform 1s; !* 过渡效果为 1 秒 *!*/
+        /*transform: translateY(-100%); !* 元素初始向上偏移100% *!*/
+    }
+
+    #show_the_order_two > a :hover {
+        color: rgb(238, 59, 60);
+    }
+
+    /*.fade-in {*/
+    /*    display: block;*/
+    /*    opacity: 1;*/
+    /*    transform: translateY(0); !* 元素向上偏移设为0，实现淡入同时从上方滑入 *!*/
+    /*}*/
+
+    /*.fade-out {*/
+    /*    opacity: 0;*/
+    /*    pointer-events: none;*/
+    /*    transform: translateY(-100%); !* 元素向上滑出，偏移设为-100% *!*/
+    /*}*/
+    #show_location_cas input {
+        margin-left: 123px;
+        width: 174px;
+        height: 30px
+    }
+
+    #show_location_cas1 input {
+        margin-left: 123px;
+        width: 174px;
+        height: 30px
+    }
+
+    #show_1 {
+        margin-left: 107px;
+    }
+
+    #show_1 > span {
+        padding-left: 12px;
+    }
+
+    star {
+
+        font-size: 18px;
+        color: #666;
+    }
+
+    .star.active {
+
+        color: #F78233;
+    }
+
+    #show_star > div {
+        display: inline-block;
+        width: 215% !important;
+    }
+
+    #show_star > div > textarea {
+        height: 166.28px !important;
+    }
+
+    .el-message__content {
+        padding-right: 350px !important;
+    }
+
+    .order_img {
+        width: 80px;
+        height: 80px;
+    }
+
+    #show_order_1 {
+        height: 275px;
+    }
+
+    .item {
+        width: 240px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        padding-left: 2px;
+        position: relative;
+
+    }
+
+    .box {
+        background: #fff;
+        border-radius: 5px;
+        background: linear-gradient(45deg, orange, red);
+    }
+
+    .item .dot-left, .item .dot-right {
+        display: block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        position: absolute;
+        z-index: 999;
+    }
+
+    .item .dot-left {
+        bottom: -6px;
+        left: -6px;
+    }
+
+    .item .dot-right {
+        bottom: -6px;
+        right: -6px;
+    }
+
+    .item .page-group {
+        position: absolute;
+        top: 10px;
+        left: -2px;
+        width: 100%;
+        max-width: 120px;
+    }
+
+    .item .page-group .fold-page {
+        display: block;
+        width: 2px;
+        height: 5px;
+        background: #db0113;
+        transform: skewY(-40deg);
+        position: absolute;
+        top: -1px;
+        left: 0;
+        z-index: 0;
+    }
+
+    .item .page-group .page {
+        position: absolute;
+        z-index: 1;
+        display: block;
+        padding: 0 10px;
+        height: 20px;
+        background: linear-gradient(137deg, #ff5b5b 0%, #db0113 100%);
+        border-radius: 0 20px 20px 0;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+        overflow: hidden;
+    }
+
+    .item .content {
+        width: 100%;
+        height: 55px;
+        border-bottom: 1px dotted #f5f5f5;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+    }
+
+    .item .footer {
+        height: 62px;
+        color: #fff;
+        font-size: 12px;
+        padding: 5px 15px 10px 15px;
+    }
+
+    .footer-label {
+        line-height: 24px;
+    }
+
+    .item .ribbon {
+        width: 80px;
+        height: 20px;
+        background: #dd0d1f;
+        position: absolute;
+        right: -20px;
+        top: 10px;
+        transform: rotateZ(45deg);
+        text-align: center;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    #show_li > label {
+        display: flex !important;
+    }
+
+    #show_li > label > span:nth-child(1) {
+        padding-top: 48px !important;
+    }
+</style>
 <body>
-
 <div id="app">
-
     <div class="head">
         小萌神订餐网
         <div class="right">
             <span class="showlogin" id="showlogin" style="display: block" @click="loginflag=!loginflag"
                   v-if="!isLoginFlag">登录</span>
-            <span id="exitspan" v-if="isLoginFlag">
-                欢迎：{{username}} | <a href="javascript:void" @click.prevent="logout()">退出</a>
-            </span>
+            <span id="exitspan" v-if="isLoginFlag">欢迎：{{username}} |
+                <a href="javascript:void" @click.prevent="logout()">退出</a></span>
+            <span @click="show_order_history()"
+                  style="position: absolute; width: 100px; top: -1px; left: -230px; font-size: 18px;">历史订单</span>
+            <span @click="show_local_manage()"
+                  style="position: absolute; width: 100px; top: -1px; left: -125px; font-size: 18px;">地址管理</span>
+        </div>
+        <img src="image/customer.png"
+             style="position: fixed;top: 40%;right: 10px;transform: translateX(-50%);border-radius: 50%;height: 40px"
+             @click="showChat();init()">
+        <img v-show="grabTicketFlag" src="image/redbag.png" @click="grabTicket()" style="position: fixed;top: 20%;left: 25px;transform: translateX(-50%);height: 60px;width: 38px;animation: blink 1s infinite;
+  transition: transform 0.5s ease-in-out;">
+    </div>
+    <!--      聊天框-->
+    <!-- entry -->
+    <div class="chat_commento" style="position: fixed;top: 60px;left: 600px" v-show="showChatDialog">
+        <!-- top -->
+        <div class="chat_top">
+            小萌神客服
+        </div>
+        <!-- line -->
+        <div class="line"></div>
+        <!-- middle -->
+        <div class="chat_middle" id="chat_middle_item">
+
+        </div>
+        <!-- line -->
+        <div class="line"></div>
+        <!-- foot -->
+        <div class="chat_foot">
+            <!-- context -->
+            <!--              textarea  多行文本标签-->
+            <textarea class="chat_context" id="chat_context_item" cols="30" rows="10" placeholder="请输入"
+                      v-model="message.content"></textarea>
+            <div class="chat_commit" id="button" @click="sendMessage">发送</div>
         </div>
     </div>
+    <!--      优惠券-->
+    <div class="item" v-show="showTicket" style="position: fixed;top: 40%;height: 200px;left: 40%;">
+        <div class="box" style="height: 150px">
+            <div class="content">
+                <div class="page-group">
+                    <i class="fold-page"></i>
+                    <span class="page">{{ ticketInfo.type }}</span>
+                </div>
+                <div style="margin-left: 36%;padding-top: 15px;color: #ffffff;
+"><span style="font-size: 20px">￥{{ getMoney }}</span></div>
+                <i class="dot-left"></i>
+                <i class="dot-right"></i>
+            </div>
+            <div class="footer">
+                <div class="footer-label">使用说明</div>
+                <div><span style="position: relative;">请在：{{ dateFormat(new Date()) }}—{{ dateFormat(overTime(new Date())) }}期间使用</span>
+                </div>
+            </div>
+            <div class="ribbon">可使用</div>
+        </div>
+        <el-button type="danger" round @click="showTicket=false" style="top: 3px;left: 66px; position: relative;">收入囊中</el-button>
+    </div>
+
 
     <div class="content">
         <ul class="allfoods" id="allfoods">
             <!--循环出来-->
             <li v-for="item,index in dataset">
-                <h3 @click="showFood(item.fid)">{{item.fname}}<span class="badge" title="浏览次数">{{item.detail_count}}</span></h3>
+                <h3 @click="showFood(item.fid)">{{item.fname}}<span class="badge"
+                                                                    title="浏览次数">{{item.detail_count}}</span></h3>
                 <!--:id=`fid_$`-->
                 <div class="fooddesc" v-show="item.status">
                     <img :src=`${item.fphoto}` class="foodimg"/>
@@ -44,7 +317,6 @@
                         <p class="buybtn" @click="addCart(item.fid,1)">加入购物车</p>
                     </article>
                 </div>
-
             </li>
         </ul>
         <!--分页条-->
@@ -74,7 +346,7 @@
         </div>
         <div class="carprice" @click.prevent="displayCart()">￥{{totalPrice}}</div>
         <div class="carinfo" v-if="cartItemArray.length<=0">购物车是空的</div>
-        <div class="carinfo" v-else @click.prevent="orderflag=!orderflag">立即下单</div>
+        <div class="carinfo" style="cursor: pointer" v-else @click.prevent="show_detail_order()">立即下单</div>
     </div>
 
     <div class="footer">
@@ -110,31 +382,882 @@
     </div>
 
     <!-- 订单信息 -->
-    <div class="login" id="myinfo" v-if="orderflag">
+    <div style="z-index: 6;top:10%" class="login" id="myinfo" v-if="orderflag">
+        <b class="el-icon-setting" style="font-size: 25px;position: absolute;top: 2%;left: 8px;cursor: pointer;color: white;
+" @click="show_local_manage()"></b>
         <span id="unshowinfo" @click.prevent="orderflag=false">X</span>
         <form name="forminfo">
-            <table>
+            <table v-for="a in res_local_de">
+                <tr>
+                    <td class="labname"><label for="address">送货地址:</label></td>
+                    <td><input name="address" type="text" placeholder="请输入送货人" id="username_o"
+                               v-model="a.username"/></td>
+                </tr>
                 <tr>
                     <td class="labname"><label for="address">送货地址:</label></td>
                     <td><input name="address" type="text" placeholder="请输入送货地址" id="address"
-                               v-model="orderInfo.address"/></td>
+                               v-model="a.address"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="address">详细地址:</label></td>
+                    <td><input name="detailed_address" type="text" placeholder="请输入详细地址" id="detailed_address"
+                               v-model="a.detailed_address"/></td>
                 </tr>
                 <tr>
                     <td class="labname"><label for="tel">联系电话:</label></td>
-                    <td><input type="text" id="tel" placeholder="请输入联系电话" name="tel" v-model="orderInfo.tel"/></td>
+                    <td><input type="text" id="tel" placeholder="请输入联系电话" name="tel" v-model="a.tel"/></td>
                 </tr>
                 <tr>
                     <td class="labname"><label for="deliverytime">送货时间:</label></td>
                     <td><input type="text" name="deliverytime" id="deliverytime" placeholder="请输入送货时间（默认马上发货）"
-                               v-model="orderInfo.deliverytime"/></td>
+                               v-model="deliverytime"/></td>
                 </tr>
                 <tr>
                     <td class="labname"><label for="ps">附言:</label></td>
-                    <td><input type="text" id="ps" placeholder="请输入附言" name="ps" v-model="orderInfo.ps"/></td>
+                    <td><input type="text" id="ps" placeholder="请输入附言" name="ps" v-model="ps"/></td>
                 </tr>
             </table>
         </form>
         <input type="button" value="提交" class="btn" id="submit" @click="confirmOrder()">
+    </div>
+    <div id="hestory_order">
+        <form onsubmit="return false;">
+            <div id="popup" class="popup">
+                <div class="popup-content" style="height: 500px;width: 782px;">
+                    <span class="close" @click="closePopup()">&times;</span>
+                    <h2 id="popup-title ">历史订单</h2>
+                    <!--                    -->
+                    <table style="width: 690px;">
+                        <thead style="display: inline-block;position: absolute;width: 725px;height: 25px;background-color: rgb(245,245,245);top: 176px;left: 377px;">
+                        <tr>
+                            <th style="display: flex;justify-content: space-between;width: 310px;position: absolute;left: -20px;">
+                                <div class="">
+                                    <div class=""
+                                         style="width: 122px;padding-left: 10px;position: relative;z-index: 2;padding-bottom: 5px;cursor: pointer; transition: all 1s;"
+                                         id="show_order">{{this.show_month}}
+                                        <b id="up"
+                                           style="width: 7px;height: 7px;display: inline-block;border-top: 1.5px solid rgb(0,0,0);border-right: 1.5px solid rgb(0,0,0);position: absolute;top: 8px;transform: rotate(-45deg);left: 102px;"></b>
+                                        <b id="down"
+                                           style="display: none;width: 7px;height: 7px;border-top: 1.5px solid rgb(0,0,0);border-right: 1.5px solid rgb(0,0,0);position: absolute;top: 5px;transform: rotate(135deg);left: 102px;"></b><span
+                                                class="blank"></span></div>
+                                    <ul id="show_the_order"
+                                        style="padding-left: 10px;list-style-type: none;background-color: rgb(255,255,255);display: none;position: absolute;z-index: 1;width: 122px;box-shadow: rgb(180 176 176) 0px 0px 1px;top: 25px;">
+                                        <li @click="three_month()" id="show_the_order_two"
+                                            style="padding-bottom: 5px;padding-top: 5px;"><a id="show_the_order_three"
+                                                                                             style="text-decoration: none;cursor: pointer;color: rgb(110,110,110);font: 12px/150% tahoma,arial,Microsoft YaHei,Hiragino Sans GB,'\u5b8b\u4f53',sans-serif;"><b></b>近三个月订单</a>
+                                        </li>
+                                        <li @click="half_a_year()" id="show_the_half_a_year" style="padding-bottom: 5px;
+    padding-top: 5px;"><a id="show_the_order_five"
+                          style="text-decoration: none;cursor: pointer;color: rgb(110,110,110);font: 12px/150% tahoma,arial,Microsoft YaHei,Hiragino Sans GB,'\u5b8b\u4f53',sans-serif;"><b></b>近半年订单</a>
+                                        </li>
+                                        <li @click="a_year()" id="show_the_order_four"
+                                            style="padding-bottom: 5px;padding-top: 5px;"><a id="show_the_order_six"
+                                                                                             style="text-decoration: none;cursor: pointer;color: rgb(110,110,110);font: 12px/150% tahoma,arial,Microsoft YaHei,Hiragino Sans GB,'\u5b8b\u4f53',sans-serif;"><b></b>近一年订单</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="">订单详情</div>
+                            </th>
+                            <th style="position: absolute;left: 340px; height: 50px;">收货人</th>
+                            <th style="height: 50px;position: absolute;left: 450px">金额
+                            </th>
+                            <th style="position: absolute;left: 550px;">
+                                <div class="deal-state-cont" id="orderState">
+                                    <div class="state-txt" id="show_status"
+                                         style="padding-bottom: 5px;width: 115px; position: absolute;left: -33px;padding-left: 40px;">
+                                        状态<span class="blank"></span></div>
+                                </div>
+                            </th>
+                            <th style="position: absolute;left: 670px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tb-284598837983"
+                               style="display: inline-block;border: 0.75px solid rgb(175,175,175);width: 725px;position: relative;top: 40px;left: 3px;margin-bottom: 20px;"
+                               v-for="(a,i) in res_order">
+                        <tr class="sep-row">
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr class="tr-th"
+                            style="background-color: rgb(245,245,245);display: inline-block;width: 723px;">
+                            <td colspan="5" style="display: flex;justify-content: space-between;">
+                                <div id="left_this"
+                                     style="display: flex;justify-content: space-between;position: relative;left: -55px;width: 310px;">
+                                    <div id="dealtime">
+                                        <span class="dealtime" title="2023-12-15 17:14:32"
+                                              style="color: rgb(170,170,170);">{{a.ordertime}}</span>
+                                        <input type="hidden" id="datasubmit-284598837983" value="2023-12-15 17:14:32">
+                                    </div>
+                                    <div id="food_number">
+                                     <span class="number" style="color: rgb(170,170,170);">
+               		                        订单号：<span>{{a.roid}}</span>
+                                     </span>
+                                    </div>
+                                    <div class="tr-operate">
+                                    <span class="order-shop">
+                                <span class="shop-txt" style="color: rgb(170,170,170);">小萌神</span>
+                                                                <a class="btn-im btn-im-jd" href="#none" title="联系客服"
+                                                                   clstag="click|keycount|orderlist|ziyingchatim"></a>
+                                </span>
+                                        <span class="order-tips"></span>
+                                        <a href="#none" clstag="click|keycount|orderlist|dingdanshanchu"
+                                           class="order-del" _orderid="284598837983"
+                                           _passkey="E29712B493A7FA3704106937FF7C7DE8"></a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span @click="delete_order_Old(a.roid)"
+                                          style="cursor: pointer;color: rgb(142,142,142)" class="el-icon-delete"></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="tr-bd" id="track284598837983" oty="0,4,70" cxl="0"
+                            style="display: flex;height: 100px;">
+                            <td style="margin: 0;display: flex;position: static;border: 1px solid #e5e5e5;width: 310px;">
+                                <div class="goods-item p-100076945066" style="display: flex;">
+                                    <div class="p-img" style="position: absolute;left: 35px;top: 40px;">
+                                        <a href="//item.jd.com/100076945066.html"
+                                           clstag="click|keycount|orderinfo|order_product" target="_blank">
+                                            <img class="" :src=`${a.fphone}` title="" data-lazy-img="done" width="60"
+                                                 height="60">
+                                        </a>
+                                    </div>
+                                    <div class="p-msg" style="position: absolute;left: 120px;top: 59px;">
+                                        <div class="p-name">
+                                            <a style="font-size: 1em;color: rgb(50,50,50);text-decoration: none"
+                                               href="" class="a-link" clstag="click|keycount|orderinfo|order_product"
+                                               target="_blank">{{a.fname}}</a>
+                                        </div>
+                                        <div class="p-extra">
+                                            <ul class="o-info">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="goods-number"
+                                     style="position: absolute;left: 200px;top: 60px;color: rgb(170,170,170);">
+                                    x{{a.num}}
+                                </div>
+                                <div class="goods-repair" style="position: absolute;margin: 0;left: 245px;top: 61px;">
+                                    <a style="text-decoration: none ;cursor: pointer" target="_blank">
+                                        <span style="color: rgb(170,170,170);font-size: 1em"
+                                              @click="show_after_sales()">申请售后</span>
+                                    </a>
+                                </div>
+                                <div class="clr"></div>
+                            </td>
+                            <td style="margin: 0;width: 100px;border: 1px solid rgb(229, 229, 229);">
+                                <div>
+                                    <div style="cursor: pointer;position: absolute;top: 63px;font-size: 1em;left: 349px;"
+                                         id="username_the" @mouseout="down_session(i)" @mouseover="show_session(i)">
+                                        <span style="">{{ru.username}}</span><b class="el-icon-s-custom"></b></div>
+                                    <div :id="'showsession'+i"
+                                         style="display: none;height: 105px;width: 210px;position: absolute;left: 110px;border: 0.1px solid rgb(175, 175, 175);box-shadow: 2px 2px 4px rgb(0 0 0 / 40%);z-index: 1;background-color: rgb(249, 249, 249);top: 40px;">
+                                        <div class="pc">
+                                            <strong style="color: rgb(150,150,150);
+                                                    font-size: 1em;
+                                                    position: absolute;">{{a.username}}</strong>
+                                            <p style="    color: rgb(150,150,150);
+                                                        position: absolute;
+                                                        top: 25px;
+                                                        font-size: 1em;">{{a.address}}</p>
+                                            <p style="color: rgb(150,150,150);
+                                                position: absolute;
+                                                top: 68px;
+                                                font-size: 1em;">{{a.tel}}</p>
+                                        </div>
+                                        <div class="p-arrow p-arrow-left" style="width: 10px;
+                                                z-index: 2;
+                                                background-color: rgb(249,249,249);
+                                                height: 10px;
+                                                box-shadow: 1px 1px 0px rgb(98 97 97 / 40%);
+                                                transform: rotate(-45deg);
+                                                position: absolute;
+                                                top: 26px;
+                                                left: 203px;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="margin: 0;
+                                        width: 110px;
+                                        border: 1px solid rgb(229, 229, 229);">
+                                <div class="amount">
+                                    <span style="     position: absolute;
+                                                        top: 40px;
+                                                        left: 418px;
+                                                        width: 93px;
+                                                        border-bottom: 1px solid rgb(175,175,175);
+                                                        padding-left: 32px;
+                                                        padding-bottom: 12px;">¥{{a.dealprice}}</span> <br>
+                                    <span class="ftx-13" style="    position: absolute;
+                                                                    top: 87px;
+                                                                    left: 440px;
+                                                                    font-size: 0.7em;
+                                                                    color: rgb(175,175,175);">在线支付</span>
+                                </div>
+                            </td>
+                            <td style="margin: 0;
+                                        width: 113px;
+                                        border: 1px solid rgb(229, 229, 229);">
+                                <div class="status">
+                    <span class="order-status ftx-03" style="    font-size: 1em;
+                                                                        color: rgb(175,175,175);
+                                                                        position: absolute;
+                                                                        top: 55px;
+                                                                        left: 558px;">
+
+            	已完成
+
+                                        </span><br><a @mouseover="show_jingdou(i)" @mouseout="down_jingdou(i)"
+                                                      id="show_jingdou" style=" position: absolute;
+                                                                color: rgb(175,175,175);
+                                                                top: 73px;
+                                                                left: 560px;
+                                                                font-size: 0.8em;
+                                                                cursor: pointer;
+                                                                text-decoration: none"><i class="el-icon-coin"></i>+{{a.dealprice}}</a>
+                                    <span style="display: none ;
+                                                    z-index: 5;
+                                                    font-size: 1em;
+                                                    color: rgb(175,175,175);
+                                                    width: auto;
+                                                    position: absolute;
+                                                    top: 64px;
+                                                    left: 612px;
+                                                    background-color: rgb(249,249,249);
+                                                    box-shadow: rgb(180 176 176) -1px -1px 3px;
+                                                    height: 20px;
+                                                    padding-top: 2px;
+                                                    padding-left: 5px;
+                                                    padding-right: 5px;
+                                                    border-radius: 3px;
+                                                    " :id="'show_return_jingdou'+i">已反{{a.dealprice}}</span>
+                                    <br>
+                                </div>
+                            </td>
+                            <td rowspan="1" id="operate284598837983" style="margin: 0;
+                                                                            width: 91px;
+                                                                            border: 1px solid rgb(229, 229, 229);">
+                                <div class="operate">
+
+
+                                    <div id="pay-button-284598837983" _baina="0"></div>
+
+
+                                    <a class="" target="_blank" @click="show_evaluation(a.roid)" style="color: rgb(110, 110, 110);
+                                                                                font-size: 1em;
+                                                                                text-decoration: none;
+                                                                                cursor: pointer;
+                                                                                position: absolute;
+                                                                                top: 45px;
+                                                                                left: 666px;">评价</a>
+                                    <br>
+                                    <a @click="addCart(a.fid,1)" style="cursor:pointer;border: 2px solid rgb(180,180,180);
+                                                                                    background-color: rgb(190,190,190);
+                                                                                    color: rgb(100,100,100);
+                                                                                    width: 72px;
+                                                                                    display: block;
+                                                                                    padding-left: 6px;
+                                                                                    text-decoration: none;
+                                                                                    position: absolute;
+                                                                                    top: 75px;
+                                                                                    left: 643px;"><b></b>
+                                        立即购买
+                                    </a><br>
+
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <div style="position: absolute;top: 545px;left: 655px;">
+                        <button @click="the_first()">首页</button>
+                        <button @click="last_page()">上一页</button>
+                        <span>{{pageno}}</span>
+                        <button @click="next_page()">下一页</button>
+                        <button @click="the_last()">尾页</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+
+            <div id="popup1" class="popup" style="z-index: 9">
+                <div class="popup-content" style="width: 630px;
+                                                  height: auto;">
+                    <span class="close" @click="closePopup_local_manage()">&times;</span>
+                    <h2 id="popup-title1">地址管理</h2>
+                    <div>
+                        <div style="margin-bottom: 13px;margin-left: 14px;">
+                            <button @click="show_add_local()">新增地址管理</button>
+                            <span style="margin-left: 60px;
+    font-size: 1em;">你已创建{{total_l}}个收货地址,最多可创建10个</span></div>
+                        <div v-for="a in res_local" style="border: 1px solid;    margin-bottom: 10px;width: 574px">
+                            <div style="margin-top: 5px;
+                                        margin-left: 5px;">
+                                <span v-if="a.alias">{{a.alias}}</span>
+                                <span v-else>{{a.username}} {{a.address}}</span>
+                                <p class="el-icon-edit"></p>
+                                <span style="
+                                        margin-left: 100px;
+                                        width: 70px;
+                                        padding-left: 7px;
+                                        background-color: rgb(255,170,69);
+                                        color: white;" v-if="a.isdefault == 1">默认地址</span>
+                                <p class="el-icon-delete" style="position: absolute;
+    left: 854px;cursor: pointer" @click="delete_local(a.adid)"></p>
+                            </div>
+                            <div style="    margin-left: 5px;
+                                            display: flex;
+                                            flex-direction: column;">
+                                <div style="    display: flex;
+                                                margin-left: 13px;
+                                                align-items: center;
+                                                float: left;">
+                                    <span>收件人:</span>
+                                    <div>{{a.username}}</div>
+                                </div>
+                                <div style="display: flex;
+                                            align-items: center;
+                                            float: left;
+                                            margin-left: 0;">
+                                    <span>所在地区:</span>
+                                    <div>{{a.address}}</div>
+                                </div>
+                                <div style="margin-left: 27px;
+                                            display: flex;">
+                                    <span>地址:</span>
+                                    <div>{{a.detailed_address}}</div>
+                                </div>
+                                <div style="display: flex;
+                                            margin-left: 27px;">
+                                    <span>手机:</span>
+                                    <div>{{a.tel}}</div>
+                                </div>
+                                <div style="display: flex;
+                                    margin-left: 0px;">
+                                    <span>固定电话:</span>
+                                    <div>{{a.landline_telephone}}</div>
+                                </div>
+                                <div style="    display: flex;
+                                            margin-left: 0;
+                                        ">
+                                    <span>电子邮箱:</span>
+                                    <div>{{a.email}}</div>
+                                </div>
+                                <div style="display: flex;
+                                    margin-right: 34px;">
+                                    <span style="cursor: pointer;margin-right: 10px" v-if="a.isdefault == 0"
+                                          @click="choose(a.adid)">设为默认地址</span>
+                                    <span style="cursor: pointer;"
+                                          @click="show_local_edit(a.adid,a.username,a.address,a.detailed_address,a.tel,a.landline_telephone,a.email,a.alias)">编辑</span>
+                                </div>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="position: relative;
+    left: 208px;">
+                            <button @click="the_first_l()">首页</button>
+                            <button @click="last_page_l()">上一页</button>
+                            <span>{{pageno_l}}</span>
+                            <button @click="next_page_l()">下一页</button>
+                            <button @click="the_last_l()">尾页</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+
+            <div id="popup2" class="popup">
+                <div class="popup-content" style="height: 475px;width: 610px">
+                    <span class="close" @click="closePopup_two()">&times;</span>
+                    <h2 id="popup-title2">添加收获地址</h2>
+                    <div style="    display: block;
+    margin-left: 0;
+    width: 480px;">
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>收货人:</span><input
+                                id="recipient"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                v-model="recipient"
+                                maxlength="20"
+                        ></div>
+                        <!--                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;"><span>所在地区:</span><input-->
+                        <!--                                id="the_location"-->
+                        <!--                                type="text"-->
+                        <!--                                placeholder="请输入内容"-->
+                        <!--                                v-model="the_location"-->
+                        <!--                                maxlength="20"-->
+                        <!--                        ></div>-->
+                        <div class="block" id="show_1">
+                            <span class="demonstration">所在地区:</span>
+                            <el-cascader id="show_location_cas"
+                                         placeholder="必填"
+                                         :options="options"
+                                         filterable
+                                         v-model="new_address"></el-cascader>
+                        </div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>详细地址:</span><input
+                                id="the_address"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                v-model="the_address"
+                                maxlength="20"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>手机号码:</span><input
+                                id="the_phone"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                v-model="the_phone"
+                                maxlength="20"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>固定电话:</span><input
+                                id="landline_telephone"
+                                type="text"
+                                placeholder="请输入内容"
+                                v-model="landline_telephone"
+                                maxlength="20"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>邮箱地址:</span><input
+                                id="email_address"
+                                type="text"
+                                placeholder="请输入内容"
+                                v-model="email_address"
+                                maxlength="20"
+                        ></div>
+                        <div>
+                            <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                                <span>地址别名:</span><input
+                                    id="address_alias"
+                                    type="text"
+                                    placeholder="请输入内容"
+                                    v-model="address_alias"
+                                    maxlength="20"
+                            ></div>
+                            <div>
+                                <span>建议填写常用名称</span>
+                                <button @click="change_alias_one()" style="    width: 60px;
+                                                                                margin-left: 5px;">家里
+                                </button>
+                                <button @click="change_alias_two()" style="    width: 60px;
+                                                                                margin-left: 5px;">父母家
+                                </button>
+                                <button @click="change_alias_three()" style="    width: 60px;
+                                                                                margin-left: 5px;">公司
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button style="margin-top: 5px;
+                            right: 450px;
+                            width: 90px;
+                            height: 25px;
+                            display: flex;
+                            position: fixed;" @click="add_address()">保存收货地址
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+
+            <div id="popup3" class="popup">
+                <div class="popup-content" style="    padding-bottom: 30px; height: auto">
+                    <span class="close" @click="closePopup_three()">&times;</span>
+                    <h2 id="popup-title3">私信客服</h2>
+                    <el-input
+                            type="textarea"
+                            :autosize="{ minRows: 2, maxRows: 5}"
+                            placeholder="请输入内容"
+                            v-model="textarea">
+                    </el-input>
+                    <div>
+                        <button style="    margin-top: 5px;
+                                            position: relative;
+                                            right: -222px;
+                                            top: 10px;
+                                            width: 70px;
+                                            height: 30px;" @click="delete_this()">确定
+                        </button>
+                        <button style="    margin-top: 5px;
+                                            position: relative;
+                                            right: -232px;
+                                            top: 10px;
+                                            width: 70px;
+                                            height: 30px;" @click="closePopup_three()">取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+
+            <div id="popup4" class="popup">
+                <div class="popup-content" style="   width: 850px; padding-bottom: 30px; height: auto">
+                    <span class="close" @click="closePopup_four()">&times;</span>
+                    <h2 id="popup-title4">订单评价</h2>
+                    <div style="    position: relative;
+    width: 1000px;
+    left: 235px;
+">
+                        <div>
+                            <div>
+                                <div>
+                                    <div>
+                                        <img src="image/500008.jpg">
+                                    </div>
+                                    <div>商品名</div>
+                                    <div>商品数量+商品价格</div>
+                                </div>
+                            </div>
+                            <div style="    margin-right: 240px;">
+                                <div>
+                                    <div>
+                                        <div>商品评分</div>
+                                        <div style="display: inline-flex">
+                                            <div style="cursor: pointer" class="star-evaluation-wrapper">
+                                                <span @click="star_num(1)" id="star_one" style="cursor: pointer"
+                                                      class="star">&#9733;</span>
+                                                <span @click="star_num(2)" id="star_two" style="cursor: pointer"
+                                                      class="star">&#9733;</span>
+                                                <span @click="star_num(3)" id="star_three" style="cursor: pointer"
+                                                      class="star">&#9733;</span>
+                                                <span @click="star_num(4)" id="star_four" style="cursor: pointer"
+                                                      class="star">&#9733;</span>
+                                                <span @click="star_num(5)" id="star_five" style="cursor: pointer"
+                                                      class="star">&#9733;</span>
+                                            </div>
+                                            <div style="margin-left: 10px;" class="result" id="show_star_number"></div>
+                                        </div>
+
+                                    </div>
+                                    <!--                                <div id="show_star">-->
+                                    <!--                                    <el-input-->
+                                    <!--                                            type="textarea"-->
+                                    <!--                                            :autosize="{ minRows: 2, maxRows: 5}"-->
+                                    <!--                                            placeholder="请输入内容"-->
+                                    <!--                                            v-model="textarea">-->
+                                    <!--                                    </el-input>-->
+                                    <!--                                </div>-->
+                                </div>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="    position: relative;
+    left: -285px;">
+                        <button style="    margin-top: 5px;
+                                            position: relative;
+                                            right: -590px;
+                                            top: 10px;
+                                            width: 70px;
+                                            height: 30px;" @click="updata_star()">确定
+                        </button>
+                        <button style="    margin-top: 5px;
+                                            position: relative;
+                                            right: -617px;
+                                            top: 10px;
+                                            width: 70px;
+                                            height: 30px;" @click="closePopup_four()">取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+            <div id="popup5" class="popup">
+                <div class="popup-content" style="    height: 475px;width: 610px">
+                    <span class="close" @click="closePopup_five()">&times;</span>
+                    <h2 id="popup-title5">修改收获地址</h2>
+                    <div style="    display: block;
+    margin-left: 0;
+    width: 480px;">
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>收货人:</span><input
+                                id="recipient1"
+                                v-model="recipient1"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                maxlength="20"
+                        ></div>
+                        <div class="block" style="margin-left: 119px;" id="show_2">
+                            <span class="demonstration">所在地区:</span>
+                            <el-cascader id="show_location_cas1"
+                                         placeholder="必填"
+                                         :options="options"
+                                         filterable
+                                         v-model="show_location_cas1"
+                            ></el-cascader>
+                        </div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>详细地址:</span><input
+                                id="the_address1"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                maxlength="20"
+                                v-model="the_address1"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>手机号码:</span><input
+                                id="the_phone1"
+                                type="text"
+                                placeholder="请输入内容 : 必填"
+                                maxlength="20"
+                                v-model="the_phone1"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>固定电话:</span><input
+                                id="landline_telephone1"
+                                type="text"
+                                placeholder="请输入内容"
+                                maxlength="20"
+                                v-model="landline_telephone1"
+                        ></div>
+                        <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                            <span>邮箱地址:</span><input
+                                id="email_address1"
+                                type="text"
+                                placeholder="请输入内容"
+                                maxlength="20"
+                                v-model="email_address1"
+                        ></div>
+                        <div>
+                            <div style="margin-bottom: 20px; margin-top: 20px; display: flex;  justify-content: space-around;">
+                                <span>地址别名:</span><input
+                                    id="address_alias1"
+                                    type="text"
+                                    placeholder="请输入内容"
+                                    maxlength="20"
+                                    v-model="address_alias1"
+                            ></div>
+                            <div>
+                                <span>建议填写常用名称</span>
+                                <button @click="change_alias_one_1()" style="    width: 60px;
+                                                                                margin-left: 5px;">家里
+                                </button>
+                                <button @click="change_alias_two_1()" style="    width: 60px;
+                                                                                margin-left: 5px;">父母家
+                                </button>
+                                <button @click="change_alias_three_1()" style="    width: 60px;
+                                                                                margin-left: 5px;">公司
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button style="margin-top: 5px;
+                            right: 350px;
+                            width: 90px;
+                            height: 25px;
+                            display: flex;
+                            position: fixed;
+                            padding-left: 15px;" @click="update_address()">保存修改
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form onsubmit="return false;">
+
+            <div id="popup6" class="popup">
+                <div class="popup-content" style="height:430px; width: 736px ;">
+                    <span class="close" @click="closePopup_six()">&times;</span>
+                    <div style="display: flex;
+    margin-left: 0;
+    width: 590px;
+    height: 64px;">
+                        <h2 id="popup-title6">订单详情</h2>
+                        <b @click="show_dicket()" style="    margin-top: 30px;
+                            margin-left: 390px;
+                            font-size: 2em;cursor: pointer"
+                           class="el-icon-s-ticket"></b>
+                        <span style="
+    padding-top: 33px;">优惠劵</span>
+
+
+                    </div>
+                    <b id="ticket_one" style="width: 12px;
+    height: 12px;
+    display: none;
+    position: absolute;
+    border-top: 1px solid rgb(100,100,100);
+    border-right: 1px solid rgb(100,100,100);
+    background-color: rgb(255,255,255);
+    transform: rotate(-45deg);
+    left: 902px;
+    top: 171px;
+    z-index: 5;"></b>
+                    <div id="ticket_two" style="display:none;position: absolute;
+    width: 377px;
+    height: auto;
+    padding: 10px;
+    background-color: rgb(255,255,255);
+    left: 830px;
+    border: 1px solid rgb(100,100,100);z-index: 4;
+border-radius: 10px">
+                        <div style="margin-bottom: 10px;"><span>可使用的优惠劵</span></div>
+                        <div style="height: 314px">
+                            <ul style="height: 268px;overflow: auto; list-style-type: none;" class="infinite-list"
+                                v-infinite-scroll="load01">
+
+                                <label class="form-check-label" v-for="(a,index) in res_ticker_user">
+                                    <div style="display: flex;
+    width: 334px;">
+                                        <input style="position: relative;
+    top: -15px;cursor: pointer;" type="radio" class="form-check-input" :name="'Radio'+'index'"
+                                               :id="'ExampleRadio1'+'index'" :value="a.tid"
+                                               @click="selectTicket1(a.no,index)">
+                                        <li id="show_li" style="margin-bottom: 10px;">
+                                            <div class="item">
+                                                <div class="box">
+                                                    <div class="content">
+                                                        <div class="page-group">
+                                                            <i class="fold-page"></i>
+                                                            <span class="page">{{a.type}}</span>
+                                                        </div>
+                                                        <div style="    margin-left: 36%;
+    padding-top: 15px;
+    color: #ffffff;
+"><span style="font-size: 20px">￥{{a.money}}</span></div>
+                                                        <i class="dot-left"></i>
+                                                        <i class="dot-right"></i>
+                                                    </div>
+                                                    <div class="footer">
+                                                        <div class="footer-label">使用说明</div>
+                                                        <div><span style="position: relative;">请在：{{a.gettime}}—{{a.overtime}}期间使用</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ribbon">可使用</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+
+                                </label>
+                                <div style="display: flex">
+                                    <div style="    position: absolute;
+    left: -1px;
+    top: 312px;
+    width: 377px;
+    height: 40px;
+    padding-left: 42px;
+    padding-top: 18px;
+    padding-bottom: 35px;
+    background-color: rgb(100,100,100);
+    border-radius: 0 0 10px 10px;">
+                                        <span>优惠劵优惠</span>
+                                        <span v-if="choose_money">￥</span><span
+                                            v-model="choose_money">{{choose_money}}</span>
+                                    </div>
+                                    <span style="    padding-top: 17px;
+    padding-bottom: 16px;
+    z-index: 5;
+    background-color: rgb(255 140 0);
+    position: absolute;
+    width: 81px;
+    padding-left: 25px;
+    padding-right: 14px;
+    left: 295px;
+    border-radius: 0 0 10px 0;
+    top: 312px;
+    cursor: pointer;" @click="choose_the_ticket()">确定</span>
+                                </div>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div style="display: flex;
+    background-color: rgb(225,225,225);">
+                            <div>图片</div>
+                            <div>商品</div>
+                            <div>单价</div>
+                            <div>数量</div>
+                            <div>小计</div>
+                            <div>操作</div>
+                        </div>
+                        <div style="width: 710px;height: 275px; overflow: hidden; margin-top: 10px">
+                            <ul id="show_order_1" class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
+
+                                <li v-for="cartItem1 in cartItemArray">
+                                    <div style="border: 1px solid rgb(150, 150, 150);
+                                display: flex;
+                                width: 695px;
+                                height: 120px;
+                                padding-top: 20px;
+                                margin-top: 14px;
+                           position: relative ">
+                                        <div style="margin: 0">
+
+                                        </div>
+                                        <div style="display: flex">
+                                            <img :src=`${cartItem1.food.fphoto}` class="order_img">
+                                            <div style="    margin-left: 20px;
+    margin-top: 30px;">{{cartItem1.food.fname}}
+                                            </div>
+                                            <div style="margin-left: 10px;
+    margin-top: 30px;">x{{cartItem1.num}}
+                                            </div>
+                                        </div>
+                                        <div style="margin-right: 47px;
+    margin-top: 30px;">
+                                            <span>￥{{cartItem1.food.realprice}}</span>
+                                        </div>
+                                        <div style="margin-right: 52px;
+    margin-top: 30px;">
+                                            <button @click="addCart(cartItem1.food.fid,1)">+</button>
+                                            <span>{{cartItem1.num}}</span>
+                                            <button @click="addCart(cartItem1.food.fid,-1)">-</button>
+                                        </div>
+                                        <div style="margin-right: 66px;
+    margin-top: 30px;">
+                                            <span>小计</span>
+                                        </div>
+                                        <div style="margin-right: 45px;
+    margin-top: 30px;">
+                                            <span @click="delete_detail_order(cartItem1.food.fid)">删除</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="position: relative">
+                        <div v-if="this.the_last_price != 0.00">
+                            <span style="position: absolute;
+                            left: 50px;
+                            top: 11px;">原价：￥{{this.totalPrice}}</span>
+                            <span style="position: absolute;
+                            left: 144px;
+                            top: 11px;">折扣：-￥{{this.choose_money}}</span>
+                            <span v-if="this.the_last_price>0.00" style="position: absolute;
+                            left:  268px;
+                            top: 11px;">总价：￥{{the_last_price}}</span>
+                            <span v-else style="position: absolute;
+                            left: 268px;
+                            top: 11px;">总价：￥0</span>
+                        </div>
+                        <span v-else-if="this.totalPrice<0" style="position: absolute;
+                            left: 268px;
+                            top: 11px;">总价：￥0</span>
+                        <span v-else style="position: absolute;left: 480px;top: 11px;">总价：￥{{totalPrice}}</span>
+
+                        <button style="margin-top: 5px;position: absolute;right: 60px;width: 70px;height: 30px;"
+                                @click="show_last_order()">去结算
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div>
@@ -143,230 +1266,1722 @@
 <script src="js/jquery-1.9.1.js"></script>
 <script src="js/vue.js"></script>
 <script src="js/axios.js"></script>
+<!--     引入样式 -->
+<link rel="stylesheet" href="css/elementui.css">
+<!-- 引入组件库 -->
+<script src="js/elementui.js"></script>
+
 <script type="text/javascript">
-    let vm = new Vue({
-        el: "#app",
-        data: {
-            orderflag: false,     //送货地址div
-            loginflag: false,
-            isLoginFlag: false,
+    window.onload = function () {
+        var c = document.getElementById("show_order")
+        c.onmouseover = function () {
+            var x = document.getElementById("show_the_order")
+            x.style.display = "inline-block"
+            var down_one = document.getElementById("down")
+            down_one.style.display = "inline-block"
+            var up_one = document.getElementById("up")
+            up_one.style.display = "none"
+        }
+        c.onmouseout = function () {
+            var h = document.getElementById("show_the_order")
+            h.style.display = "none"
+            var down_three = document.getElementById("down")
+            down_three.style.display = "none"
+            var up_three = document.getElementById("up")
+            up_three.style.display = "inline-block"
+        }
+        var y = document.getElementById("show_the_order")
+        y.onmouseout = function () {
+            y.style.display = "none"
+            var down_four = document.getElementById("down")
+            down_four.style.display = "none"
+            var up_four = document.getElementById("up")
+            up_four.style.display = "inline-block"
+        }
+        var d = document.getElementById("show_the_order_two")
+        d.onmouseover = function () {
+            var z = document.getElementById("show_the_order")
+            z.style.display = "inline-block"
+            var down_two = document.getElementById("down")
+            down_two.style.display = "inline-block"
+            var up_two = document.getElementById("up")
+            up_two.style.display = "none"
+        }
+        var e = document.getElementById("show_the_order_three")
+        e.onmouseover = function () {
+            e.style.color = "rgb(238,59,60)";
+        }
+        e.onmouseout = function () {
+            e.style.color = "rgb(110,110,110)"
+        }
+        var k = document.getElementById("show_the_half_a_year")
+        k.onmouseover = function () {
+            var z = document.getElementById("show_the_order")
+            z.style.display = "inline-block"
+            var down_two = document.getElementById("down")
+            down_two.style.display = "inline-block"
+            var up_two = document.getElementById("up")
+            up_two.style.display = "none"
+        }
+        var l = document.getElementById("show_the_order_five")
+        l.onmouseover = function () {
+            l.style.color = "rgb(238,59,60)";
+        }
+        l.onmouseout = function () {
+            l.style.color = "rgb(110,110,110)"
+        }
 
-            orderInfo: {
-                address: '湖南工学院',
-                tel: '12345678910',
-                deliverytime: '2023-11-02 19:04:04',
-                ps: '快快'
-            },
+        var i = document.getElementById("show_the_order_four")
+        i.onmouseover = function () {
+            var z = document.getElementById("show_the_order")
+            z.style.display = "inline-block"
+            var down_two = document.getElementById("down")
+            down_two.style.display = "inline-block"
+            var up_two = document.getElementById("up")
+            up_two.style.display = "none"
+        }
+        var u = document.getElementById("show_the_order_six")
+        u.onmouseover = function () {
+            u.style.color = "rgb(238,59,60)";
+        }
+        u.onmouseout = function () {
+            u.style.color = "rgb(110,110,110)"
+        }
+        var starone = document.getElementById("star_one")
+        var startwo = document.getElementById("star_two")
+        var starthree = document.getElementById("star_three")
+        var starfour = document.getElementById("star_four")
+        var starfive = document.getElementById("star_five")
+        starone.onmouseover = function () {
+            console.log("star_number" + this.star_number)
 
-            isHide: true,
-            cartItemArray: [],//订单菜品
-            totalPrice: 0.0,
+            starone.style.color = "#F78233"
+            startwo.style.color = "rgb(51,51,51)"
+            starthree.style.color = "rgb(51,51,51)"
+            starfour.style.color = "rgb(51,51,51)"
+            starfive.style.color = "rgb(51,51,51)"
 
-            userid: '',
-            username: '',
-            pwd: '',
-            email: '',
-            yzm: '',
-            dataset: [],//菜品列表
+        }
+        startwo.onmouseover = function () {
+            starone.style.color = "#F78233"
+            startwo.style.color = "#F78233"
+            starthree.style.color = "rgb(51,51,51)"
+            starfour.style.color = "rgb(51,51,51)"
+            starfive.style.color = "rgb(51,51,51)"
 
-            pagebean: {
-                pageno: 2,
-                pagesize: 5,
-                pre: 1,
-                next: 1,
-                sortby: "fid",
-                sort: "desc",
-                total: 0,
-                totalpages: 0
+        }
+        starthree.onmouseover = function () {
+            starone.style.color = "#F78233"
+            startwo.style.color = "#F78233"
+            starthree.style.color = "#F78233"
+            starfour.style.color = "rgb(51,51,51)"
+            starfive.style.color = "rgb(51,51,51)"
+
+        }
+        starfour.onmouseover = function () {
+            starone.style.color = "#F78233"
+            startwo.style.color = "#F78233"
+            starthree.style.color = "#F78233"
+            starfour.style.color = "#F78233"
+            starfive.style.color = "rgb(51,51,51)"
+
+        }
+        starfive.onmouseover = function () {
+
+            starone.style.color = "#F78233"
+            startwo.style.color = "#F78233"
+            starthree.style.color = "#F78233"
+            starfour.style.color = "#F78233"
+            starfive.style.color = "#F78233"
+
+        }
+        starone.onmouseout = function () {
+            var star_nums_the = document.getElementById("show_star_number").innerText
+
+            console.log(star_nums_the)
+            if (star_nums_the == "1分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "rgb(51,51,51)"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
             }
-        },
-        computed: {
-            //计算属性
-        },
-        methods: {
-            confirmOrder: function () {
-                var params = new URLSearchParams(this.orderInfo);//address=xx&tel=xxx
-                axios.post("resorder/confirmOrder", params).then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        this.cartItemArray = [];
-                        this.totalPrice = 0.0;
-                        this.isHide = false;
-                        this.orderflag = false;
-                        alert("下单成功")
-                    }
-                });
-            },
-            clearAll: function () {
-                axios.get("resorder/clearAll").then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        this.cartItemArray = [];
-                        this.totalPrice = 0.0;
-                        this.isHide = false;
-                    }
-                });
-            },
-            displayCart: function () {
-                this.isHide = !this.isHide;
-            },
-            showCart: function () {
-                axios.get("resorder/getCartInfo").then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        this.showCartInfo(jsonModel.obj);
-                        //this.isHide = false;
-                    } else {
-                        this.cartItemArray = [];
-                        this.totalPrice = 0.0;
-                        this.isHide = false;
-                    }
-                })
-            },
-            showCartInfo: function (cartItemArray) {
-                this.cartItemArray = cartItemArray;
-                this.totalPrice = 0;
-                this.cartItemArray.forEach((item, index) => {
-                    this.totalPrice += item.smallCount;
-                })
-            },
-            addCart: function (fid, num) {
-                let _this = this;
-                if (_this.username == null || _this.username == '') {
-                    alert("请先登录");
-                    _this.loginflag = true;
-                    return;
-                }
-                var params = new URLSearchParams();
-                params.append("num", num);
-                params.append("fid", fid);
-                axios.post("resorder/addCart", params).then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        _this.cartItemArray = jsonModel.obj;
-                        this.showCartInfo(_this.cartItemArray);
-                        return;
-                    }
-                    if (jsonModel.code == 0) {
-                        alert("添加购物车失败");
-                        return;
-                    }
-                    //添加成功，显示购物车
-                    this.showCartInfo(jsonModel.obj);//obj就是购物车
-                })
-            },
-            logout: function () {
-                var _this = this;
-                axios.get("resuser/logout").then(result => {
-                    var jsonModel = result.data;
-                    var resuser = jsonModel.obj;
-                    _this.userid = '';
-                    _this.email = '';
-                    _this.username = '';
-                    _this.isLoginFlag = false;
-                });
-            },
-            login: function () {
-                let _this = this;
-                var params = new URLSearchParams();
-                params.append('username', _this.username);
-                params.append('pwd', _this.pwd);
-                params.append('yzm', _this.yzm);
-                axios.post("resuser/login", params).then(result => {
-                    var data = result.data;
-                    if (data.code == 1) {
-                        alert("登录成功");
-                        var resuser = data.obj;
-                        _this.userid = resuser.userid;
-                        _this.email = resuser.email;
-                        _this.loginflag = false;
+            if (star_nums_the == "2分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "3分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "4分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "5分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "#F78233"
+            }
 
-                        _this.isLoginFlag = true;
-                    } else {
-                        alert("登录失败", data.msg);
-                    }
-                })
+        }
+        startwo.onmouseout = function () {
+            var star_nums_the = document.getElementById("show_star_number").innerText
+
+            if (star_nums_the == "1分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "rgb(51,51,51)"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "2分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "3分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "4分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "5分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "#F78233"
+            }
+
+        }
+        starthree.onmouseout = function () {
+            var star_nums_the = document.getElementById("show_star_number").innerText
+
+            if (star_nums_the == "1分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "rgb(51,51,51)"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "2分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "3分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "4分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "5分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "#F78233"
+            }
+
+        }
+        starfour.onmouseout = function () {
+            var star_nums_the = document.getElementById("show_star_number").innerText
+
+            if (star_nums_the == "1分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "rgb(51,51,51)"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "2分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "3分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "4分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "5分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "#F78233"
+            }
+
+        }
+        starfive.onmouseout = function () {
+            var star_nums_the = document.getElementById("show_star_number").innerText
+
+            if (star_nums_the == "1分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "rgb(51,51,51)"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "2分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "rgb(51,51,51)"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "3分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "rgb(51,51,51)"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "4分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "rgb(51,51,51)"
+            }
+            if (star_nums_the == "5分") {
+                starone.style.color = "#F78233"
+                startwo.style.color = "#F78233"
+                starthree.style.color = "#F78233"
+                starfour.style.color = "#F78233"
+                starfive.style.color = "#F78233"
+            }
+
+        }
+
+    }
+
+    let vm = new Vue({
+            el: "#app",
+            data: {
+                orderflag: false,     //送货地址div
+                loginflag: false,
+                isLoginFlag: false,
+                orderInfo: {
+                    address: '湖南工学院',
+                    tel: '12345678910',
+                    deliverytime: '2023-11-02 19:04:04',
+                    ps: '快快'
+                },
+                userid: '',
+                username: '',
+                pwd: '',
+                email: '',
+                yzm: '',
+                dataset: [],//菜品列表
+                pagebean: {
+                    pageno: 2,
+                    pagesize: 5,
+                    pre: 1,
+                    next: 1,
+                    sortby: "fid",
+                    sort: "desc",
+                    total: 0,
+                    totalpages: 0
+                },
+                isHide: true,
+                cartItemArray: [],//订单菜品
+                totalPrice: 0.0,
+                //陈荣 聊天功能区域
+                client: '',
+                message: {
+                    content: '',
+                    toUser: '',
+                    fromUser: '',
+                    date: '',
+                    readed: ''
+                },
+                user: '',
+                showChatDialog: false,
+                grabTicketFlag: false,// 判断是否有抢券活动
+                history: '',
+                getMoney: '',
+                showTicket: false,
+                ticketInfo: {
+                    tno: '',
+                    fullmoney: '',
+                    money: '',
+                    ticketCount: '',
+                    type: '',
+                    starttime: '',
+                    endtime: ''
+                },
+                //罗杰镕
+                res_roid: 0,
+                radio: '',
+                recipient1: '',
+                show_location_cas1: '',
+                the_address1: '',
+                the_phone1: '',
+                landline_telephone1: '',
+                email_address1: '',
+                address_alias1: '',
+                adid: '',
+                T_No: '',
+                alias1: '',
+                star_number: '无',
+                local: [],
+                address_alias: '',
+                ps: '',
+                show_dicket_status: 1,
+                res_order: [],
+                pageno: '1',
+                pagesize: '2',
+                total: "",
+                the_time: '90',
+                res_local: [],
+                pageno_l: '1',
+                pagesize_l: '2',
+                total_l: '',
+                the_address: '',
+                new_address: '',
+                the_phone: '',
+                landline_telephone: '',
+                email_address: '',
+                recipient: '',
+                deliverytime: '',
+                username_o: '',
+                address_o: '',
+                detailed_address_o: '',
+                tel_o: '',
+                star_n: 0,
+                ticket_choose: '0',
+                No: '',
+                textarea: '',
+                ru: [],
+                the_last_price: 0.00,
+                options: [],
+                res_ticker_user: [],
+                res_selectTicket: [],
+                choose_money: 0,
+                res_local_de: [],
+                show_month: "近三个月订单",
+
             },
-            clickPage: function (pageno) {
-                if (pageno>this.pagebean.totalpages){
-                    alert("当前就是最后一页")
-                }else {
-                    var promise = this.showPage(pageno);// promise对象
-                    promise.then(result => {
-                        this.displayPage(result.data.data);//result.data就是 jsonModel
-                    });
-                }
+            computed: {
+                //计算属性
             },
-            showFood: function (fid) {
-                let _this = this;
-                _this.dataset.forEach((item, index) => {
-                    item.status = (fid == item.fid);
-                });
-                //访问controller->调用修改Redis给这菜：resfood_菜编号_detail
-                axios.get("resfood/detailCountAdd?fid="+fid).then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        var count = jsonModel.obj;
-                        _this.dataset.forEach((item, index) => {
-                            if (item.fid==fid){
-                                item.detail_count = count;
+            methods: {
+                //陈荣
+                // 优惠券过期时间
+                overTime(today) {
+                    var overTime = new Date(today); // 创建一个新的 Date 对象，以避免改变原有的日期对象
+                    overTime.setMonth(today.getMonth() + 1); // 设置新日期为原日期加上一个月
+                    return overTime;
+                },
+                // 获取聊天记录
+                getChatRecord() {
+                    document.getElementById('chat_middle_item').innerHTML = '';
+                    this.history = [];
+                    // 将消息转成已读
+                    // this.handleUnreadMessage();
+                    // 获取和他之间的历史信息
+                    axios.get("/reschat/selectRecord?toUser=" + this.username + "&fromUser=小萌神客服").then(res => {
+                        this.history = res.data.obj;
+                        console.log(this.history);
+                        // this.$forceUpdate()
+                        this.history.forEach((value, index) => {
+                            // 创建一个消息容器元素
+                            const messageContainer = document.createElement('div');
+
+                            // 根据消息发送人的类型添加不同的 class
+                            const className = value.fromuser == "小萌神客服" ? "chat_left" : "chat_right";
+                            messageContainer.className = className;
+
+                            // 创建消息内容 HTML 结构
+                            messageContainer.innerHTML = `
+                        <div class="${className}_item_1">${value.fromuser.toString().substring(0, 3)}</div>
+                        <div class="${className}_item_2">
+                        <div class="${className}_time">${value.time}</div>
+                          <div class="${className}_content">
+                            ${value.content}
+                          </div>
+                        </div>
+                      `;
+
+                            // 将消息容器添加到聊天界面中
+                            const chatBox = document.getElementById('chat_middle_item');
+                            chatBox.appendChild(messageContainer);
+                            //定位到最后一条消息的位置(无滚动效果)    behavior: "smooth" 滚动到最后一条消息的位置
+                            const lastMessage = chatBox.lastElementChild;
+                            if (lastMessage) {
+                                lastMessage.scrollIntoView({behavior: "auto", block: "end"});
                             }
+                        })
+                    })
+
+                },
+                showChat() {
+                    this.showChatDialog = !this.showChatDialog;
+                    if (this.showChatDialog) {
+                        this.getChatRecord();
+                        axios.get("/reschat/handleUnreadMessage?toUser=" + this.username + "&fromUser=" + this.message.toUser).then();
+                    }
+                },
+                init() {
+                    var _this = this;
+                    this.user = new WebSocket("ws://localhost:2000/websocket/" + this.username);
+                    this.user.onopen = function () {
+                        console.log("服务端连接已建立！");
+                    };
+                    this.user.onclose = function () {
+                        console.log("服务端连接已断开！");
+                    };
+                    this.user.onmessage = function (msg) {
+                        // let messages = [this.message];
+                        // messages = localStorage.getItem("chat") == null ? [] : localStorage.getItem("chat");
+                        // console.log(this.messages);
+                        // this.messages.push(msg.data);
+                        // localStorage.setItem("chat",this.messages);
+
+                        const message = JSON.parse(msg.data);
+                        const fromUser = message.fromUser;
+                        const content = message.content;
+                        const date = message.date;
+                        const toUser = message.toUser;
+                        const readed = message.readed;
+                        axios.get("/reschat/addChatRecord?content=" + content + "&fromuser=" + fromUser + "&touser=" +
+                            toUser + "&type=" + "text" + "&readed=" + readed).then(() => {
+
+                        });
+                        if (_this.message.toUser != '') {
+                            // 创建一个消息容器元素
+                            const messageContainer = document.createElement('div');
+
+                            // 根据消息发送人的类型添加不同的 class
+                            const className = message.fromUser === "小萌神客服" ? "chat_left" : "chat_right";
+                            messageContainer.className = className;
+
+                            // 创建消息内容 HTML 结构
+                            messageContainer.innerHTML = `
+                                <div class="${className}_item_1">${fromUser.toString().substring(0, 3)}</div>
+                                <div class="${className}_item_2">
+                                <div class="${className}_time">${date}</div>
+                                  <div class="${className}_content">
+                                    ${content}
+                                  </div>
+                                </div>
+                              `;
+
+                            // 将消息容器添加到聊天界面中
+                            const chatBox = document.getElementById('chat_middle_item');
+                            chatBox.appendChild(messageContainer);
+                            const lastMessage = chatBox.lastElementChild;
+                            if (lastMessage) {
+                                lastMessage.scrollIntoView({behavior: "auto", block: "end"});
+                            }
+                        }
+
+                    };
+                },
+                sendMessage() {
+                    if (this.message.content == '' || this.message.content == null) {
+                        return;
+                    } else {
+                        // 点击某位联系人，获取他的标识，如果跟他是初次聊天则创建一个容器来存储只属于这两个人的聊天记录
+                        this.message.fromUser = this.username; // 发送端
+                        this.message.toUser = '小萌神客服'
+                        this.message.date = this.dateFormat(new Date());
+                        // 将新消息插入到聊天记录中
+                        this.user.send(JSON.stringify(this.message));
+                        this.message.content = '';
+                    }
+                },
+                dateFormat(date) {
+                    const dateObject = new Date(date);
+                    const year = dateObject.getFullYear();
+                    const month = dateObject.getMonth() + 1;
+                    const day = dateObject.getDate();
+                    const hours = dateObject.getHours();
+                    const minutes = dateObject.getMinutes();
+                    const seconds = dateObject.getSeconds();
+                    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                    return formattedDateTime;
+                },
+                // 抢券
+                grabTicket() {
+                    if (this.username == '' || this.username == null) {
+                        alert("登录之后才能参与此活动！");
+                    } else {
+                        axios.get("resticket/grabTicket?username=" + this.username + "&uno=" + this.userid).then(res => {
+                            if (res.data.code == 1) {
+                                this.$message({
+                                    type: 'success',
+                                    message: res.data.msg
+                                })
+                                this.getMoney = res.data.obj;
+                                this.showTicket = true;
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: res.data.msg
+                                })
+                            }
+                        })
+                    }
+                },
+                selectTicket() {
+                    return axios.get("/resticket/selectTicket");
+                },
+                updateLastOnline() {
+                    axios.get("/resuser/updateLastOnline?userid=" + this.userid).then();
+                },
+
+                //罗杰镕
+                choose_the_ticket() {
+                    var ticket_one = document.getElementById("ticket_one")
+                    var ticket_two = document.getElementById("ticket_two")
+                    ticket_one.style.display = "none"
+                    ticket_two.style.display = "none"
+                    this.show_dicket_status = this.show_dicket_status + 1
+                    this.the_last_price = this.totalPrice - this.choose_money
+                },
+                selectTicket1(no, index) {
+                    this.res_ticker_user[index].select = false;
+                    this.res_ticker_user.forEach((value) => {
+                        value.select = false;
+                    })
+                    if (!this.res_ticker_user[index].select) {
+                        this.res_ticker_user[index].select = true;
+                        this.No = no
+                        axios.get("resticket/findByNo", {
+                            params: {
+                                no: no
+                            }
+                        }).then(res => {
+                            if (res.data.code == 1) {
+                                this.res_selectTicket = res.data.data[0]
+                                this.choose_money = this.res_selectTicket.money
+                                this.T_No = this.res_selectTicket.no
+                            }
+                        })
+                    }
+                },
+
+                show_last_order() {
+                    this.orderflag = !this.orderflag
+                    axios.get("resAddressManage/findByusidDe", {
+                        params: {
+                            usid: this.userid
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.res_local_de = res.data.data
+                            this.username_o = this.res_local_de[0].username,
+                                console.log(this.res_local_de)
+                            console.log(this.username_o + "username_o")
+                            this.address_o = this.res_local_de[0].address,
+                                this.detailed_address_o = this.res_local_de[0].detailed_address,
+                                this.tel_o = this.res_local_de[0].tel
+                        }
+                    })
+                },
+                star_num(nums) {
+                    var nums_s = document.getElementById("show_star_number")
+                    nums_s.innerText = this.star_number = nums + "分";
+                    this.star_number = "nums+'分'";
+                    this.star_n = nums
+                },
+                change_alias_one() {
+                    this.address_alias = '家里'
+                },
+                change_alias_two() {
+                    this.address_alias = '父母家'
+                },
+                change_alias_three() {
+                    this.address_alias = '公司'
+                },
+                change_alias_one_1() {
+                    this.address_alias1 = '家里'
+                },
+                change_alias_two_1() {
+                    this.address_alias1 = '父母家'
+                },
+                change_alias_three_1() {
+                    this.address_alias1 = '公司'
+                },
+                show_after_sales() {
+                    var popup = document.getElementById("popup3");
+                    popup.style.display = "block"  //申请售后
+                },
+                show_dicket() {
+                    var ticket_one = document.getElementById("ticket_one")
+                    var ticket_two = document.getElementById("ticket_two")
+                    if (this.show_dicket_status % 2 != 0) {
+
+                        ticket_one.style.display = "block"
+                        ticket_two.style.display = "block"
+                        this.findticketByUno()
+                        this.show_dicket_status = this.show_dicket_status + 1
+                    } else {
+                        ticket_one.style.display = "none"
+                        ticket_two.style.display = "none"
+                        this.show_dicket_status = this.show_dicket_status + 1
+                    }
+                },
+                show_add_local() {
+                    var popup = document.getElementById("popup2");
+                    if (this.total_l >= 10) {
+                        this.$message({
+                            message: '地址设置已达上限',
+                            type: 'warning'
+                        });
+                    } else {
+                        popup.style.display = "block"    //新增地址
+                    }
+                },
+                show_local_manage() {
+                    let _this = this;
+                    if (_this.username == null || _this.username == '') {
+                        this.$message({
+                            message: '请先登录',
+                            type: 'warning'
+                        });
+                        _this.loginflag = true;
+                        return;
+                    }
+                    var popup = document.getElementById("popup1");
+                    var popupTitle = document.getElementById("popup-title1");
+                    this.find_Local()
+                    popup.style.display = "block"; // 显示弹窗 -- 地址管理
+                },
+                find_Local() {
+                    console.log(this.userid)
+                    axios.get("/resAddressManage/findById", {
+                        params: {
+                            usid: this.userid,
+                            pageno_l: this.pageno_l,
+                            pagesize_l: this.pagesize_l
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.res_local = res.data.data;
+                            this.total_l = res.data.total_l
+                            console.log(this.total_l)
+                        }
+                    })
+                },
+                load() {
+                    this.cartItemArray += 2
+                },
+                load01() {
+                    this.res_ticker_user += 2
+                },
+                choose(adid) {
+                    axios.get("resAddressManage/update_default", {
+                        params: {
+                            adid: adid,
+                            usid: this.userid
+                        }
+                    }).then(res => {
+                        console.log(res)
+                        if (res.data == 1) {
+                            this.$message({
+                                message: '设置成功',
+                                type: 'success'
+                            });
+                            this.show_last_order()
+                            this.find_Local()
+                        }
+                    })
+                },
+                updata_star() {
+                    axios.get("resorder/updataStarByRoid", {
+                        params: {
+                            roid: this.res_roid,
+                            star: this.star_n
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message({
+                                message: '评价成功',
+                                type: 'success'
+                            });
+                            this.closePopup_four()
+                        } else if (res.data.code == 2) {
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'warning'
+                            });
+                        }
+                    })
+                },
+                //     显示历史订单界面
+                show_order_history() {
+                    let _this = this;
+                    if (_this.username == null || _this.username == '') {
+                        this.$message({
+                            message: '请先登录',
+                            type: 'warning'
+                        });
+                        _this.loginflag = true;
+                        return;
+                    }
+                    var popup = document.getElementById("popup");
+                    console.log(popup + "popup")
+                    popup.style.display = "block"; // 显示弹窗--历史订单
+
+                    this.findOldAll();
+
+
+                },
+                add_address() {
+                    console.log(this.new_address)
+                    let address = ""
+                    this.new_address.forEach(item => {
+                        address = address + item
+                    })
+                    console.log(address)
+                    if (this.recipient == null || this.new_address == null || this.the_address == null || this.the_phone == null) {
+                        this.$message({
+                            message: '请输入所有必填内容',
+                            type: 'warning'
+                        });
+                    } else {
+                        axios.get("resAddressManage/add_local", {
+                            params: {
+                                usid: this.userid,
+                                address: address,
+                                detailed_address: this.the_address,
+                                tel: this.the_phone,
+                                landline_telephone: this.landline_telephone,
+                                email: this.email_address,
+                                alias: this.address_alias,
+                                username: this.recipient
+                            }
+                        }).then(res => {
+                            console.log(res)
+                            if (res.data == 1) {
+                                this.closePopup_two(),
+                                    this.$message({
+                                        message: '新增成功',
+                                        type: 'success'
+                                    });
+                                this.find_Local()
+                            }
+                        })
+                    }
+                },
+                show_evaluation(roid) {
+                    this.res_roid = roid;
+                    var popup = document.getElementById("popup4");
+                    popup.style.display = "block"; // 显示弹窗
+                },
+                show_detail_order() {
+                    var popup = document.getElementById("popup6");
+                    popup.style.display = "block"; // 显示弹窗
+                },
+                closePopup() {
+                    var popup = document.getElementById("popup");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_local_manage() {
+                    var popup = document.getElementById("popup1");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_two() {
+                    var popup = document.getElementById("popup2");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_three() {
+                    var popup = document.getElementById("popup3");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_four() {
+                    var popup = document.getElementById("popup4");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_five() {
+                    var popup = document.getElementById("popup5");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                closePopup_six() {
+                    var popup = document.getElementById("popup6");
+                    popup.style.display = "none"; // 隐藏弹窗
+                },
+                confirmOrder: function () {
+                    // a.username,a.address,a.detailed_address,a.tel,deliverytime,ps
+                    var deliverytime = document.getElementById("deliverytime").value
+                    var ps = document.getElementById("ps").value
+                    var address = document.getElementById("address").value
+                    var username_o = document.getElementById("username_o").value
+                    var detailed_address_o = document.getElementById("detailed_address").value
+                    var tel_o = document.getElementById("tel").value
+                    console.log(deliverytime + "--" + ps)
+                    axios.get("resorder/confirmOrder", {
+                        params: {
+                            address: address,
+                            username: username_o,
+                            detailed_address: detailed_address_o,
+                            tel: tel_o,
+                            deliverytime1: deliverytime,
+                            ps: ps
+                        }
+                    }).then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            this.cartItemArray = [];
+                            this.totalPrice = 0.0;
+                            this.isHide = false;
+                            this.orderflag = false;
+                            this.deleteByNo()
+                            this.the_last_price = 0.00
+                            this.choose_money = 0.00
+                            this.closePopup_six()
+                            this.$message({
+                                message: '下单成功',
+                                type: 'success'
+                            });
+
+
+                        }
+                    });
+                },
+                deleteByNo() {
+                    axios.get("resticket/deleteByNo", {
+                        params: {
+                            no: this.T_No
+                        }
+                    })
+                },
+                three_month: function () {
+                    this.show_month = '近三个月订单'
+                    this.the_time = '90'
+                    this.findOldAll()
+                },
+                half_a_year: function () {
+                    this.show_month = '近半年订单'
+                    this.the_time = '180'
+                    this.findOldAll()
+                },
+                a_year: function () {
+                    this.show_month = '近一年订单'
+                    this.the_time = "365"
+                    this.findOldAll()
+                },
+                show_session(i) {
+                    var a = "showsession" + i
+                    var m = document.getElementById(a)
+                    m.style.display = "block";
+                },
+                down_session(i) {
+                    var a = "showsession" + i;
+                    var m = document.getElementById(a)
+                    m.style.display = "none";
+                },
+                show_jingdou(i) {
+                    var a = "show_return_jingdou" + i;
+                    var n = document.getElementById(a)
+                    n.style.display = "inline-block";
+                },
+                down_jingdou(i) {
+                    var a = "show_return_jingdou" + i;
+                    var n = document.getElementById(a)
+                    n.style.display = "none";
+                },
+                delete_order_Old(roid) {
+                    axios.get("resorder/deleteOldByRoid", {
+                        params: {
+                            roid: roid
+                        }
+                    })
+                },
+                last_page() {
+                    if (this.pageno == 1) {
+                        this.$message({
+                            message: '当前为第一页',
+                            type: 'warning'
+                        });
+                    } else {
+                        this.pageno = this.pageno - 1;
+                        this.findOldAll()
+                    }
+
+                },
+                last_page_l() {
+                    if (this.pageno_l == 1) {
+                        this.$message({
+                            message: '当前为第一页',
+                            type: 'warning'
+                        });
+                    } else {
+                        this.pageno_l = this.pageno_l - 1;
+                        this.find_Local()
+                    }
+                },
+                next_page() {
+                    if (this.total % this.pagesize > 0) {
+                        if (this.pageno >= Math.floor(this.total / this.pagesize) + 1) {
+                            this.$message({
+                                message: '当前为最后一页',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.pageno = parseInt(this.pageno) + 1
+                            this.findOldAll()
+                        }
+
+                    }
+                    if (this.total % this.pagesize == 0) {
+                        if (this.pageno >= Math.floor(this.total / this.pagesize)) {
+                            this.$message({
+                                message: '当前为最后一页',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.pageno = parseInt(this.pageno) + 1
+                            this.findOldAll()
+                        }
+                    }
+                },
+                findticketByUno() {
+                    axios.get("resticket/findByUno", {
+                        params: {
+                            uno: this.userid
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.res_ticker_user = Array.from(res.data.data)
+                            if (res.data.data.length == 1) {
+                                this.res_ticker_user = Array.from(this.res_ticker_user)
+                            }
+                            this.res_ticker_user.forEach((value, index) => {
+                                value.select = false;
+                            })
+                        }
+                    })
+                },
+                next_page_l() {
+                    if (this.total_l % this.pagesize_l > 0) {
+                        if (this.pageno_l >= Math.floor(this.total_l / this.pagesize_l) + 1) {
+                            this.$message({
+                                message: '当前为最后一页',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.pageno_l = parseInt(this.pageno_l, 10) + 1
+                            this.find_Local()
+                        }
+                    }
+                    if (this.total_l % this.pagesize_l == 0) {
+                        if (this.pageno_l >= Math.floor(this.total_l / this.pagesize_l)) {
+                            this.$message({
+                                message: '当前为最后一页',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.pageno_l = parseInt(this.pageno_l, 10) + 1
+                            this.find_Local()
+                        }
+                    }
+                },
+                the_first() {
+                    this.pageno = 1;
+                    this.findOldAll()
+                },
+                the_first_l() {
+                    this.pageno_l = 1;
+                    this.find_Local()
+                },
+                the_last() {
+                    if (this.total % this.pagesize > 0) {
+                        this.pageno = Math.floor(this.total / this.pagesize) + 1
+                        this.findOldAll()
+                    }
+                    if (this.total % this.pagesize == 0) {
+                        this.pageno = this.total / this.pagesize
+                        this.findOldAll()
+                    }
+                },
+                the_last_l() {
+                    if (this.total_l % this.pagesize_l > 0) {
+                        this.pageno_l = Math.floor(this.total_l / this.pagesize_l) + 1
+                        this.find_Local()
+                    }
+                    if (this.total_l % this.pagesize_l == 0) {
+                        this.pageno_l = this.total_l / this.pagesize_l
+                        this.find_Local()
+                    }
+                },
+                show_local_edit(adid, username, address, detailed_address, tel, landline_telephone, email, alias) {
+                    this.adid = adid
+                    this.recipient1 = username
+                    this.the_address1 = detailed_address
+                    this.the_phone1 = tel
+                    this.landline_telephone1 = landline_telephone
+                    this.email_address1 = email
+                    this.address_alias1 = alias
+                    document.getElementById("recipient1").value = username
+                    document.getElementById("show_location_cas1").firstElementChild.firstElementChild.value = address
+                    document.getElementById("the_address1").value = detailed_address
+                    document.getElementById("the_phone1").value = tel
+                    document.getElementById("landline_telephone1").value = landline_telephone
+                    document.getElementById("email_address1").value = email
+                    document.getElementById("address_alias1").value = alias
+                    var popup = document.getElementById("popup5");
+                    popup.style.display = "block"    //新增地址
+                },
+                update_address() {
+                    let address = ""
+                    this.show_location_cas1.forEach(item => {
+                        address = address + item
+                    })
+                    if (this.recipient == null || this.new_address == null || this.the_address == null || this.the_phone == null) {
+                        this.$message({
+                            message: '请输入所有必填内容',
+                            type: 'warning'
+                        });
+                    } else {
+                        axios.get("resAddressManage/update_local", {
+                            params: {
+                                adid: this.adid,
+                                username: this.recipient1,
+                                address: address,
+                                detailed_address: this.the_address1,
+                                tel: this.the_phone1,
+                                landline_telephone: this.landline_telephone1,
+                                email: this.email_address1,
+                                alias: this.address_alias1
+                            }
+                        }).then(res => {
+                            if (res.data == 1) {
+                                this.closePopup_five()
+                                this.$message({
+                                    message: '修改成功',
+                                    type: 'success'
+                                });
+                                this.find_Local()
+                            }
+                        })
+                    }
+                },
+                delete_local(adid) {
+                    axios.get("resAddressManage/detele_local", {
+                        params: {
+                            adid: adid
+                        }
+                    }).then(res => {
+                        if (res.data == 1) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.pageno_l = 1
+                            this.find_Local()
+                        }
+                    })
+                },
+                findOldAll: function () {
+                    axios.get("resorder/findOldAll", {
+                        params: {
+                            PageNo: this.pageno,
+                            PageSize: this.pagesize,
+                            the_time: this.the_time
+                        }
+                    }).then(res => {
+                        const data = res.data.data
+                        data.forEach(d => {
+                            console.log(d)
+                        })
+                        if (res.data.code == 1) {
+                            this.res_order = res.data.data
+                            this.ru = res.data.ru
+                            this.total = res.data.total
+
+                        } else if (res.data.code == -2) {
+                            alert(res.data.msg)
+                        }
+                    }).catch(error => {
+                        console.log(error); // 在控制台输出错误详情
+                    })
+                },
+                //刘帅
+                // confirmOrder: function () {
+                //     var params = new URLSearchParams(this.orderInfo);//address=xx&tel=xxx
+                //     axios.post("resorder/confirmOrder", params).then(result => {
+                //         var jsonModel = result.data;
+                //         if (jsonModel.code == 1) {
+                //             this.cartItemArray = [];
+                //             this.totalPrice = 0.0;
+                //             this.isHide = false;
+                //             this.orderflag = false;
+                //             alert("下单成功")
+                //         }
+                //     });
+                // },
+                clearAll: function () {
+                    axios.get("resorder/clearAll").then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            this.cartItemArray = [];
+                            this.totalPrice = 0.0;
+                            this.isHide = false;
+                        }
+                    });
+                },
+                displayCart: function () {
+                    this.isHide = !this.isHide;
+                },
+                showCart: function () {
+                    axios.get("resorder/getCartInfo").then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            this.showCartInfo(jsonModel.obj);
+                            //this.isHide = false;
+                        } else {
+                            this.cartItemArray = [];
+                            this.totalPrice = 0.0;
+                            this.isHide = false;
+                        }
+                    })
+                },
+                showCartInfo: function (cartItemArray) {
+                    this.cartItemArray = cartItemArray;
+                    this.totalPrice = 0;
+                    this.cartItemArray.forEach((item, index) => {
+                        this.totalPrice += item.smallCount;
+                    })
+                },
+                addCart: function (fid, num) {
+                    let _this = this;
+                    if (_this.username == null || _this.username == '') {
+                        alert("请先登录");
+                        _this.loginflag = true;
+                        return;
+                    }
+                    var params = new URLSearchParams();
+                    params.append("num", num);
+                    params.append("fid", fid);
+                    axios.post("resorder/addCart", params).then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            _this.cartItemArray = jsonModel.obj;
+                            this.showCartInfo(_this.cartItemArray);
+                            return;
+                        }
+                        if (jsonModel.code == 0) {
+                            alert("添加购物车失败");
+                            return;
+                        }
+                        //添加成功，显示购物车
+                        this.showCartInfo(jsonModel.obj);//obj就是购物车
+                    })
+                },
+                logout: function () {
+                    this.updateLastOnline();
+                    var _this = this;
+                    axios.get("resuser/logout").then(result => {
+                        var jsonModel = result.data;
+                        var resuser = jsonModel.obj;
+                        _this.userid = '';
+                        _this.email = '';
+                        _this.username = '';
+                        _this.isLoginFlag = false;
+                    });
+                },
+                login: function () {
+                    let _this = this;
+                    var params = new URLSearchParams();
+                    params.append('username', _this.username);
+                    params.append('pwd', _this.pwd);
+                    params.append('yzm', _this.yzm);
+                    axios.post("resuser/login", params).then(result => {
+                        var data = result.data;
+                        if (data.code == 1) {
+                            alert("登录成功");
+                            var resuser = data.obj;
+                            _this.userid = resuser.userid;
+                            _this.email = resuser.email;
+                            _this.loginflag = false;
+                            _this.isLoginFlag = true;
+                            this.getChatRecord();
+                            this.updateLastOnline();
+                        } else {
+                            alert("登录失败", data.msg);
+                        }
+                    })
+                },
+                clickPage: function (pageno) {
+                    if (pageno > this.pagebean.totalpages) {
+                        alert("当前就是最后一页")
+                    } else {
+                        var promise = this.showPage(pageno);// promise对象
+                        promise.then(result => {
+                            this.displayPage(result.data.data);//result.data就是 jsonModel
                         });
                     }
-                });
-            },
-            //普通方法
-            showPage: function (pageno) {
-                var _this = this;//因为this在页面指window对象，在这里指vue对象，所以为防止变量污染，建议重新指定变量
-                //Promise对象
-                return axios.get("resfood/findPage?pageno=" + pageno
-                    + "&pagesize=" + this.pagebean.pagesize
-                    + "&sortby=" + this.pagebean.sortby
-                    + "&sort=" + this.pagebean.sort);
-            },
-            displayPage: function (jsonModel) {
-                if (jsonModel.code == 1) {
-                    jsonModel.dataset.forEach((item, index) => {
-                        item.status = false;
+                },
+                showFood: function (fid) {
+                    let _this = this;
+                    _this.dataset.forEach((item, index) => {
+                        item.status = (fid == item.fid);
                     });
-                    this.pagebean = jsonModel;
-                    //this.dataset 这是view对象   model view view-model  MVVM模型
-                    this.dataset = jsonModel.dataset;
+                    //访问controller->调用修改Redis给这菜：resfood_菜编号_detail
+                    axios.get("resfood/detailCountAdd?fid=" + fid).then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            var count = jsonModel.obj;
+                            _this.dataset.forEach((item, index) => {
+                                if (item.fid == fid) {
+                                    item.detail_count = count;
+                                }
+                            });
+                        }
+                    });
+                },
+                //普通方法
+                showPage: function (pageno) {
+                    var _this = this;//因为this在页面指window对象，在这里指vue对象，所以为防止变量污染，建议重新指定变量
+                    //Promise对象
+                    return axios.get("resfood/findPage?pageno=" + pageno
+                        + "&pagesize=" + this.pagebean.pagesize
+                        + "&sortby=" + this.pagebean.sortby
+                        + "&sort=" + this.pagebean.sort);
+                },
+                displayPage: function (jsonModel) {
+                    if (jsonModel.code == 1) {
+                        jsonModel.dataset.forEach((item, index) => {
+                            item.status = false;
+                        });
+                        this.pagebean = jsonModel;
+                        //this.dataset 这是view对象   model view view-model  MVVM模型
+                        this.dataset = jsonModel.dataset;
+                    }
+                },
+                isLogin: function () {
+                    var _this = this;
+                    axios.get("resuser/isLogin").then(result => {
+                        var jsonModel = result.data;
+                        if (jsonModel.code == 1) {
+                            var resuser = jsonModel.obj;
+                            _this.userid = resuser.userid;
+                            _this.email = resuser.email;
+                            _this.username = resuser.username;
+                            _this.loginflag = false;
+                            _this.isLoginFlag = true;
+                            this.getChatRecord();
+                        } else {
+                            _this.isLoginFlag = false;
+                        }
+                    });
                 }
             },
-            isLogin: function () {
+            mounted: function () {
                 var _this = this;
-                axios.get("resuser/isLogin").then(result => {
-                    var jsonModel = result.data;
-                    if (jsonModel.code == 1) {
-                        var resuser = jsonModel.obj;
-                        _this.userid = resuser.userid;
-                        _this.email = resuser.email;
-                        _this.username = resuser.username;
-                        _this.loginflag = false;
-                        _this.isLoginFlag = true;
-                    } else {
-                        _this.isLoginFlag = false;
-                    }
-                });
-            }
-        },
-        mounted: function () {
-            axios.all([this.showPage(1), this.isLogin(), this.showCart()]).then(
-                axios.spread(function (d1, d2, d3) {
-                    let jsonModel = d1.data.data;
-                    if (jsonModel.code == 1) {
-                        vm.displayPage(jsonModel);
+                    axios.all([this.showPage(1), this.isLogin(), this.showCart(), this.selectTicket()]).then(
+                        axios.spread(function (d1, d2, d3, res4) {
+                            let jsonModel = d1.data.data;
+                            if (jsonModel.code == 1) {
+                                vm.displayPage(jsonModel);
+                            }
+                            if (res4.data.code == 1) { // 如果有正在进行的抢券活动
+                                if (new Date(res4.data.endtime) < new Date()) {// 并且该活动已过期，就将其结束
+                                    axios.get("/resticket/over?tno=" + res4.data.obj.tno).then()
+                                    _this.grabTicketFlag = false;
+                                } else {
+                                    _this.grabTicketFlag = true;
+                                    _this.ticketInfo = res4.data.obj;
+                                }
+                            } else { // 没有正在进行的抢券活动
+                                _this.grabTicketFlag = false;
+                            }
+                        })
+                    );
+                    // var prom=this.showPage(1);
+                    // prom.then(result=>{
+                    //
+                    // });
+                },
+            created() {
+                axios.get("https://www.mxnzp.com/api/address/list?app_id=rhrnmsjpnxkkphov&app_secret=TmITIrzQMW8Zm2ryQWa8w8tPH8QhD61R").then(res => {
+                    //console.log(res.data)
+                    if (res.data.code == 1) {
+                        this.local = res.data.data;
+                        var options = [];
+                        this.local.forEach(province => {
+                            var provinceData = {
+                                value: province.name,
+                                label: province.name,
+                                children: []
+                            };
+                            province.pchilds.forEach(city => {
+                                var cityData = {
+                                    value: city.name,
+                                    label: city.name,
+                                    children: []
+                                };
+                                city.cchilds.forEach(area => {
+                                    var areaData = {
+                                        value: area.name,
+                                        label: area.name
+                                    };
+                                    cityData.children.push(areaData);
+                                });
+                                provinceData.children.push(cityData);
+                            });
+                            options.push(provinceData);
+                        });
+                        this.options = options;
                     }
                 })
-            );
-            // var prom=this.showPage(1);
-            // prom.then(result=>{
-            //
-            // });
-        }
-    });
+            },
+            destroyed() {
+                // 在组件销毁之前执行的操作
+                // 比如解绑事件监听器、取消异步请求或清除定时器等
+                //  记录用户最后在线的时间
+                axios.get("/resuser/updateLastOnline?userid=" + this.userid).then();
+            }
+        });
 </script>
+<style>
+    /*红包闪动的效果*/
+    @keyframes blink {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.3);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 
+    /*抢到券的的显示效果*/
+    .item {
+        width: 240px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        padding-left: 2px;
+        position: relative;
+
+    }
+
+    .box {
+        background: #fff;
+        border-radius: 5px;
+        background: linear-gradient(45deg, orange, red);
+    }
+
+    .item .dot-left, .item .dot-right {
+        display: block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        position: absolute;
+        z-index: 999;
+    }
+
+    .item .dot-left {
+        bottom: -6px;
+        left: -6px;
+    }
+
+    .item .dot-right {
+        bottom: -6px;
+        right: -6px;
+    }
+
+    .item .page-group {
+        position: absolute;
+        top: 10px;
+        left: -2px;
+        width: 100%;
+        max-width: 120px;
+    }
+
+    .item .page-group .fold-page {
+        display: block;
+        width: 2px;
+        height: 5px;
+        background: #db0113;
+        transform: skewY(-40deg);
+        position: absolute;
+        top: -1px;
+        left: 0;
+        z-index: 0;
+    }
+
+    .item .page-group .page {
+        position: absolute;
+        z-index: 1;
+        display: block;
+        padding: 0 10px;
+        height: 20px;
+        background: linear-gradient(137deg, #ff5b5b 0%, #db0113 100%);
+        border-radius: 0 20px 20px 0;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+        overflow: hidden;
+    }
+
+    .item .content {
+        width: 100%;
+        height: 55px;
+        border-bottom: 1px dotted #f5f5f5;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+    }
+
+    .item .footer {
+        height: 62px;
+        color: #fff;
+        font-size: 12px;
+        padding: 5px 15px 10px 15px;
+    }
+
+    .footer-label {
+        line-height: 24px;
+    }
+
+    .item .ribbon {
+        width: 80px;
+        height: 20px;
+        background: #dd0d1f;
+        position: absolute;
+        right: -20px;
+        top: 10px;
+        transform: rotateZ(45deg);
+        text-align: center;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    /*聊天框样式*/
+
+    .chat_commento {
+        width: 450px;
+        height: 650px;
+        margin: auto;
+        border-radius: 10px;
+        border: 2px solid #f4f5f7;
+    }
+
+    .clearfix::after {
+        content: "";
+        display: block;
+        clear: both;
+        width: 0;
+        height: 0;
+        line-height: 0;
+        visibility: hidden;
+    }
+
+    /* top */
+    .chat_top {
+        width: 100%;
+        height: 50px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding-left: 20px;
+        font-size: 20px;
+        line-height: 50px;
+        box-sizing: border-box;
+        font-weight: 550;
+        border-width: 0px;
+    }
+
+    /* middle */
+    /* 左边 */
+    .chat_middle {
+        width: 450px;
+        height: 455px;
+        position: relative;
+        box-sizing: border-box;
+        overflow: auto;
+        border-width: 0px;
+    }
+
+    .chat_left {
+        width: 100%;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .chat_left_item_1 {
+        width: 50px;
+        height: 50px;
+        background-color: #4459AB;
+        float: left;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        border-radius: 25px;
+    }
+
+    .chat_left_item_2 {
+        width: 55%;
+        height: 100px;
+        float: left;
+        margin-top: 10px;
+    }
+
+    .chat_left_item_2 .chat_left_chat {
+        float: left;
+    }
+
+    .chat_left_item_2 .chat_left_content {
+        padding: 15px;
+        margin-top: 10px;
+        background-color: #f4f5f7;
+        display: inline-block;
+        border-radius: 10px;
+        border-top-left-radius: 0px;
+    }
+
+    /* 右边 */
+    .chat_right {
+        width: 100%;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .chat_right_item_1 {
+        width: 50px;
+        height: 50px;
+        background-color: #4459AB;
+        float: right;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        border-radius: 25px;
+    }
+
+    .chat_right_item_2 {
+        width: 55%;
+        height: 100px;
+        float: right;
+        margin-top: 10px;
+    }
+
+    .chat_left_time {
+        width: 100%;
+        text-align: left;
+    }
+
+    .chat_right_time {
+        width: 100%;
+        text-align: right;
+    }
+
+    .chat_right_content {
+        float: right;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        border-top-right-radius: 0px;
+        background-color: #4F7cff;
+        color: white;
+    }
+
+    /* foot */
+    .chat_foot {
+        width: 450px;
+        height: 130px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        position: relative;
+    }
+
+    .chat_context {
+        width: 100%;
+        height: 100%;
+        font-size: 17px;
+        box-sizing: border-box;
+        outline: none;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-width: 0px;
+        padding: 16px;
+    }
+
+    .chat_commit {
+        width: 80px;
+        height: 30px;
+        color: white;
+        background-color: #4F7cff;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 5px;
+        position: absolute;
+        right: 10px;
+        bottom: 20px;
+        margin-right: 10px;
+    }
+
+    .chat_context {
+        resize: none;
+    }
+
+    .chat_context::placeholder {
+        color: black;
+        font-weight: 500 k;
+    }
+
+    .line {
+        width: 100%;
+        border-top: 1px;
+        border-color: #f4f5f7;
+        border-style: solid;
+    }
+
+</style>
 </body>
 </html>

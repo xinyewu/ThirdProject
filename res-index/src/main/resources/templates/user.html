@@ -13,9 +13,10 @@
         <div id="app" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">用户管理</h1>
             <template>
-                <el-table :data="tableData" height="600" border style="width: 100%" @expand-change="up" :row-key="getRowKeys" :expand-row-keys="expands">
+                <el-table :data="tableData" height="600" border style="width: 100%" @expand-change="up"
+                          :row-key="getRowKeys" :expand-row-keys="expands">
                     <el-table-column type="expand">
-                        <template slot-scope="props" >
+                        <template slot-scope="props">
                             <el-form label-position="left" inline class="demo-table-expand" :key="itemKey">
                                 <div v-for=" i in props.row.children">
                                     <el-form-item label="订单号:">
@@ -26,11 +27,18 @@
                                     </el-form-item>
                                 </div>
                                 <div style="justify-content: center;display: flex;">
-                                    <a href="javascript:void" @click.prevent="clickPage(1,props.row.userid)" style="margin-right: 20px;">第一页</a>
-                                    <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno-1,props.row.userid)" style="margin-right: 20px;">上一页</a>
-                                    <a href="javascript:void" @click.prevent="clickPage(pagebean.pageno+1,props.row.userid)" style="margin-right: 20px;">下一页</a>
-                                    <a href="javascript:void" @click.prevent="clickPage(pagebean.totalpages,props.row.userid)" style="margin-right: 20px;">最后一页</a>
-                                   每页{{pagebean.pagesize}}条记录,共{{pagebean.totalpages}}页,当前第{{pagebean.pages}}页
+                                    <a href="javascript:void" @click.prevent="clickPage(1,props.row.userid)"
+                                       style="margin-right: 20px;">第一页</a>
+                                    <a href="javascript:void"
+                                       @click.prevent="clickPage(pagebean.pageno-1,props.row.userid)"
+                                       style="margin-right: 20px;">上一页</a>
+                                    <a href="javascript:void"
+                                       @click.prevent="clickPage(pagebean.pageno+1,props.row.userid)"
+                                       style="margin-right: 20px;">下一页</a>
+                                    <a href="javascript:void"
+                                       @click.prevent="clickPage(pagebean.totalpages,props.row.userid)"
+                                       style="margin-right: 20px;">最后一页</a>
+                                    每页{{pagebean.pagesize}}条记录,共{{pagebean.totalpages}}页,当前第{{pagebean.pages}}页
                                 </div>
                                 <el-form-item label="总订单数:">
                                     <span> {{pagebean.total}}</span>
@@ -50,7 +58,8 @@
                         <template slot-scope="scope" style="justify-items: center;display: flex">
                             <el-button v-if="scope.row.status==0" @click="upStatus(scope.row)" type="danger"
                                        size="small">拉黑</a></el-button>
-                            <el-button v-if="scope.row.status==1" type="info" size="small">已经拉黑</a></el-button>
+                            <el-button v-if="scope.row.status==1" type="info" size="small"
+                                       @click="upStatus1(scope.row)">已经拉黑</a></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -74,10 +83,10 @@
                 sortby: "userid",
                 sort: "desc",
                 totalpages: 0,
-                total:0,
-                pages:1
+                total: 0,
+                pages: 1
             },
-            itemKey:0,
+            itemKey: 0,
             expands: [], // 只展开一行放入当前行id
             getRowKeys: (row) => { // 获取当前行id
                 return row.userid; // 这里看这一行中需要根据哪个属性值是id
@@ -88,7 +97,7 @@
             //计算属性
         },
         methods: {
-            up:function (row,expandedRows){
+            up: function (row, expandedRows) {
                 // 每次只展开一行
                 let that = this;
                 if (expandedRows.length) {
@@ -99,7 +108,7 @@
                 } else {
                     that.expands = []
                 }
-                this.pagebean.pageno=1;
+                this.pagebean.pageno = 1;
                 axios.get("resorder/findByUid", {
                     params: {
                         userid: row.userid,
@@ -109,41 +118,67 @@
                         sort: this.pagebean.sort,
                     }
                 }).then(res => {
-                    for (let i = 0; i <this.tableData.length; i++) {
-                        if (this.tableData[i].userid==res.data.data.records[0].userid){
-                            this.tableData[i].children=res.data.data.records;
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        if (this.tableData[i].userid == res.data.data.records[0].userid) {
+                            this.tableData[i].children = res.data.data.records;
                         }
                     }
-                    this.pagebean.pageno=res.data.data.current;
-                    this.pagebean.totalpages=res.data.data.pages;
-                    this.pagebean.total=res.data.data.total;
-                    this.pagebean.pages=res.data.data.current;
+                    this.pagebean.pageno = res.data.data.current;
+                    this.pagebean.totalpages = res.data.data.pages;
+                    this.pagebean.total = res.data.data.total;
+                    this.pagebean.pages = res.data.data.current;
                     this.itemKey = Math.random();
                 })
             },
-            clickPage: function (pageno,userid) {
-                console.log(pageno+":"+userid)
-                    axios.get("resorder/findByUid", {
+            clickPage: function (pageno, userid) {
+                console.log(pageno + ":" + userid)
+                axios.get("resorder/findByUid", {
+                    params: {
+                        userid: userid,
+                        pageno: pageno,
+                        pagesize: this.pagebean.pagesize,
+                        sortby: this.pagebean.sortby,
+                        sort: this.pagebean.sort,
+                    }
+                }).then(res => {
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        if (this.tableData[i].userid == res.data.data.records[0].userid) {
+                            this.tableData[i].children = res.data.data.records;
+                        }
+                    }
+                    this.pagebean.pageno = res.data.data.current;
+                    this.pagebean.totalpages = res.data.data.pages;
+                    this.pagebean.total = res.data.data.total;
+                    this.pagebean.pages = res.data.data.current;
+                    this.itemKey = Math.random();
+                })
+
+            },
+            upStatus1(i) {
+                this.$confirm('此操作将取消用户拉黑状态, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get("resuser/upStatus1", {
                         params: {
-                            userid: userid,
-                            pageno: pageno,
-                            pagesize: this.pagebean.pagesize,
-                            sortby: this.pagebean.sortby,
-                            sort: this.pagebean.sort,
+                            userid: i.userid,
+                            username: i.username,
+                            pwd: i.pwd
                         }
                     }).then(res => {
-                        for (let i = 0; i <this.tableData.length; i++) {
-                            if (this.tableData[i].userid==res.data.data.records[0].userid){
-                                this.tableData[i].children=res.data.data.records;
-                            }
-                        }
-                        this.pagebean.pageno=res.data.data.current;
-                        this.pagebean.totalpages=res.data.data.pages;
-                        this.pagebean.total=res.data.data.total;
-                        this.pagebean.pages=res.data.data.current;
-                        this.itemKey = Math.random();
+                        this.$message({
+                            type: 'success',
+                            message: '取消拉黑状态成功!'
+                        });
+                        location.reload();
                     })
-
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消该操作'
+                    });
+                });
             },
             upStatus(i) {
                 axios.get("resuser/upStatus", {
@@ -154,6 +189,7 @@
                     }
                 }).then(res => {
                     this.$message(res.data.msg);
+                    location.reload();
                 })
             },
             findAll() {
@@ -170,9 +206,9 @@
                             }
                         }).then(res => {
                             i.children = res.data.data.records;
-                            let m=res.data.data.total%res.data.data.size;
-                            this.pagebean.totalpages=m;
-                            this.pagebean.total=res.data.data.total;
+                            let m = res.data.data.total % res.data.data.size;
+                            this.pagebean.totalpages = m;
+                            this.pagebean.total = res.data.data.total;
                         })
                     })
                 })

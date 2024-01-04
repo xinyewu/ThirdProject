@@ -107,4 +107,31 @@ public class ResorderBizImpl implements ResorderBiz {
     public List<Map<String, Object>> findMoney(String year) {
         return resorderMapper.findMoney(year);
     }
+
+    @Override
+    public List<Map<String, Object>> findOldAll(Integer Pageno,Integer PageSize,String the_time,Integer userid) {
+
+        return resorderMapper.findOldAll(Pageno,PageSize,the_time,userid);
+    }
+
+    @Override
+    public void delete_orderOldBy_roid(Integer roid) {
+
+        resorderMapper.deleteById(roid);
+        resorderitemMapper.deleteByRoiid(roid);
+    }
+
+    @Override
+    public List<Map<String, Object>> findOldAll1(String the_time, Integer userid) {
+        return resorderMapper.findOldAll1(the_time,userid);
+    }
+
+    @Override
+    public Integer updataByRoidStar(Integer roid, Integer star) {
+        Resorder resorder = new Resorder();
+        resorder.setRoid(roid);
+        resorder.setStars(star.toString());
+        return resorderMapper.updateById(resorder);
+    }
+
 }

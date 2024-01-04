@@ -22,4 +22,6 @@ public class Resorder implements Serializable {
     private String ps;
     private Integer status ;
     private String stars;
+    private String detailed_address;
+    private String username;
 }
