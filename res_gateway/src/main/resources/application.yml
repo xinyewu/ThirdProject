@@ -53,7 +53,7 @@ spring:
           predicates: #PathRoutePredicateFactory
             - Path=/resfood/** #http://localhost:20001/resfood/findAll
             #            - After=2023-12-19T17:15:47.789+08:00[Asia/Shanghai]
-            - ServiceTimeBetween=上午06:00,下午10:00  #测试addCart服务时间段控制
+           # - ServiceTimeBetween=上午06:00,下午11:00  #测试addCart服务时间段控制
           filters:
             - AddRequestHeader=token,123
             - MyTime=hello,world

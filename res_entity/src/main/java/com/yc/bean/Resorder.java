@@ -24,4 +24,5 @@ public class Resorder implements Serializable {
     private String stars;
     private String detailed_address;
     private String username;
+    private Double discount;
 }

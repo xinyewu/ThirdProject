@@ -145,13 +145,14 @@ public class ResorderController {
     }
 
     @RequestMapping(value = "confirmOrder", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> confirmOrder(@RequestParam String address,@RequestParam String username,@RequestParam String detailed_address,@RequestParam String tel,@RequestParam String deliverytime1,@RequestParam String ps, HttpSession session) {
+    public Map<String, Object> confirmOrder(@RequestParam Double discount,@RequestParam String address,@RequestParam String username,@RequestParam String detailed_address,@RequestParam String tel,@RequestParam String deliverytime1,@RequestParam String ps, HttpSession session) {
         Resorder order = new Resorder();
         order.setAddress(address);
         order.setUsername(username);
         order.setDetailed_address(detailed_address);
         order.setPs(ps);
         order.setTel(tel);
+        order.setDiscount(discount);
         Map<String, Object> map = new HashMap<>();
         if (session.getAttribute("cart") == null || ((Map<Integer, CartItem>) session.getAttribute("cart")).size() <= 0) {
             map.put("code", -1);

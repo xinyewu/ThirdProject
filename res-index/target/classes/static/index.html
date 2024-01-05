@@ -587,7 +587,7 @@
                                                         width: 93px;
                                                         border-bottom: 1px solid rgb(175,175,175);
                                                         padding-left: 32px;
-                                                        padding-bottom: 12px;">¥{{a.dealprice}}</span> <br>
+                                                        padding-bottom: 12px;">¥{{a.dealprice-a.discount}}</span> <br>
                                     <span class="ftx-13" style="    position: absolute;
                                                                     top: 87px;
                                                                     left: 440px;
@@ -771,7 +771,7 @@
         </form>
         <form onsubmit="return false;">
 
-            <div id="popup2" class="popup">
+            <div id="popup2" class="popup" style="z-index: 10;">
                 <div class="popup-content" style="height: 475px;width: 610px">
                     <span class="close" @click="closePopup_two()">&times;</span>
                     <h2 id="popup-title2">添加收获地址</h2>
@@ -914,8 +914,6 @@
                                     <div>
                                         <img src="image/500008.jpg">
                                     </div>
-                                    <div>商品名</div>
-                                    <div>商品数量+商品价格</div>
                                 </div>
                             </div>
                             <div style="    margin-right: 240px;">
@@ -1994,7 +1992,6 @@ border-radius: 10px">
                     popup.style.display = "block"; // 显示弹窗 -- 地址管理
                 },
                 find_Local() {
-                    console.log(this.userid)
                     axios.get("/resAddressManage/findById", {
                         params: {
                             usid: this.userid,
@@ -2028,7 +2025,6 @@ border-radius: 10px">
                                 message: '设置成功',
                                 type: 'success'
                             });
-                            this.show_last_order()
                             this.find_Local()
                         }
                     })
@@ -2068,10 +2064,7 @@ border-radius: 10px">
                     var popup = document.getElementById("popup");
                     console.log(popup + "popup")
                     popup.style.display = "block"; // 显示弹窗--历史订单
-
                     this.findOldAll();
-
-
                 },
                 add_address() {
                     console.log(this.new_address)
@@ -2155,7 +2148,7 @@ border-radius: 10px">
                     var username_o = document.getElementById("username_o").value
                     var detailed_address_o = document.getElementById("detailed_address").value
                     var tel_o = document.getElementById("tel").value
-                    console.log(deliverytime + "--" + ps)
+                    var discount=this.choose_money;
                     axios.get("resorder/confirmOrder", {
                         params: {
                             address: address,
@@ -2163,7 +2156,8 @@ border-radius: 10px">
                             detailed_address: detailed_address_o,
                             tel: tel_o,
                             deliverytime1: deliverytime,
-                            ps: ps
+                            ps: ps,
+                            discount:discount,
                         }
                     }).then(result => {
                         var jsonModel = result.data;
@@ -2232,6 +2226,8 @@ border-radius: 10px">
                         params: {
                             roid: roid
                         }
+                    }).then(res=>{
+                        this.findOldAll()
                     })
                 },
                 last_page() {

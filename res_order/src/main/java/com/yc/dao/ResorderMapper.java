@@ -20,12 +20,12 @@ public interface ResorderMapper extends BaseMapper<Resorder> {
             "where resorder.roid=resorderitem.roid and  SUBSTR(deliverytime,1,4)=#{year} GROUP BY name")
     public List<Map<String ,Object>>findMoney(String year);
 
-    @Select("select resfood.fid,resorder.username,resorder.roid,resorder.ordertime,resfood.fname,resfood.fphoto,resorderitem.num,resorder.address,resorder.tel,resorderitem.dealprice from" +
-            " resfood,resorder,resorderitem where resorder.roid = resorderitem.roid and resorderitem.fid = resfood.fid and  DATEDIFF(NOW(), resorder.ordertime) <= #{the_time} LIMIT #{Pageno},#{PageSize}")
+    @Select("select resfood.fid,resorder.username,resorder.discount,resorder.roid,resorder.ordertime,resfood.fname,resfood.fphoto,resorderitem.num,resorder.address,resorder.tel,resorderitem.dealprice from" +
+            " resfood,resorder,resorderitem where resorder.roid = resorderitem.roid and resorder.userid=#{userid} and resorder.status=3 and resorderitem.fid = resfood.fid and  DATEDIFF(NOW(), resorder.ordertime) <= #{the_time} LIMIT #{Pageno},#{PageSize}")
     public List<Map<String,Object>>findOldAll(@Param("Pageno")Integer Pageno, @Param("PageSize")Integer PageSize, @Param("the_time")String the_time, @Param("userid")Integer userid);
 
-    @Select("select resorder.username,resorder.roid,resorder.ordertime,resfood.fname,resfood.fphoto,resorderitem.num,resorder.address,resorder.tel,resorderitem.dealprice from" +
-            " resfood,resorder,resorderitem where resorder.roid = resorderitem.roid and resorderitem.fid = resfood.fid and  DATEDIFF(NOW(), resorder.ordertime) <= #{the_time} ")
+    @Select("select resorder.username,resorder.roid,resorder.discount,resorder.ordertime,resfood.fname,resfood.fphoto,resorderitem.num,resorder.address,resorder.tel,resorderitem.dealprice from" +
+            " resfood,resorder,resorderitem where resorder.roid = resorderitem.roid and resorder.userid=#{userid} and resorder.status=3 and resorderitem.fid = resfood.fid and  DATEDIFF(NOW(), resorder.ordertime) <= #{the_time} ")
     public List<Map<String,Object>>findOldAll1(@Param("the_time")String the_time,@Param("userid")Integer userid);
 
 }

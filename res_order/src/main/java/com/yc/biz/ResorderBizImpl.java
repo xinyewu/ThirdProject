@@ -116,9 +116,11 @@ public class ResorderBizImpl implements ResorderBiz {
 
     @Override
     public void delete_orderOldBy_roid(Integer roid) {
-
-        resorderMapper.deleteById(roid);
-        resorderitemMapper.deleteByRoiid(roid);
+        QueryWrapper wrapper=new QueryWrapper();
+        wrapper.eq("roid",roid);
+        Resorder resorder=new Resorder();
+        resorder.setStatus(0);
+        resorderMapper.update(resorder,wrapper);
     }
 
     @Override
